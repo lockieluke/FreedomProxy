@@ -21,5 +21,18 @@ window.navigator.sendBeacon = new Proxy(window.navigator.sendBeacon, {
     }
 });
 
+const oldAppendChild = Element.prototype.appendChild;
+
+// @ts-ignore
+Element.prototype.appendChild = function () {
+    const element: Element = _.first(arguments);
+    if (_.isFunction(element.getAttribute)) {
+        const src = element.getAttribute('src');
+        if (src)
+            element.setAttribute('src', Utils.rewriteUrl(src));
+    }
+    return oldAppendChild.apply(this, arguments);
+}
+
 Debug.log('✅ FreedomRuntime Loaded');
 DOM.runDomClock();
