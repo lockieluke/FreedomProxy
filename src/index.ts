@@ -89,17 +89,6 @@ app.register(async fastify => {
                     const runtimeJS = await fs.readFile(path.join(__dirname, '..', 'dist', 'runtime.js'), 'utf-8');
                     const script = `
                     <script type="application/javascript">
-                    const originalConsoleLog = console.log;
-                    console.log = function() {
-                        args = [];
-                        args.push("[FreedomRuntime 🚀]");
-                        // Note: arguments is part of the prototype
-                        for (let i = 0; i < arguments.length; i++) {
-                            args.push( arguments[i] );
-                        }
-                        originalConsoleLog.apply( console, args );
-                    };
-                    
                     window.targetUrl = '${_.toString(url)}';
                     window.serverUrl = '${Network.currentAddress}';
                     </script>
@@ -112,9 +101,9 @@ app.register(async fastify => {
                             window.ogFetch = window.fetch;
                             window.fetch = (input, init) => (bareClient.fetch(input, init));
                         } catch (err) {
-                            console.error("❌ Failed to connect to server", err);
+                            console.error("[🚀 FreedomRuntime] ❌ Failed to connect to server", err);
                         } finally {
-                            console.log("✅ Initialised Bare Client");
+                            console.log("[🚀 FreedomRuntime] ✅ Initialised Bare Client");
                         }
                     })();
                     </script>

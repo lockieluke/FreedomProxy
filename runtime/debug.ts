@@ -24,4 +24,8 @@ export default class Debug {
         })();
     }
 
+    static log(...args: any[]) {
+        console.log(`[🚀 FreedomRuntime] `, ...args);
+    }
+
 }

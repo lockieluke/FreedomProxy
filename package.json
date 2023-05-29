@@ -60,6 +60,7 @@
     "is-relative-url": "^4.0.0",
     "is-url": "^1.2.4",
     "lodash-es": "^4.17.21",
+    "modern-async": "^1.1.3",
     "node-fetch": "^3.3.1",
     "normalize-url": "^8.0.0",
     "react": "^18.2.0",
