@@ -14,7 +14,12 @@ XMLHttpRequest.prototype.open = function (method: string, url: string, async: bo
 window.history.pushState = _.constant(void 0);
 window.history.replaceState = _.constant(void 0);
 
-window.navigator.sendBeacon = _.constant(true);
+window.navigator.sendBeacon = new Proxy(window.navigator.sendBeacon, {
+    apply: function (target, thisArg, argumentsList) {
+        argumentsList[0] = Utils.rewriteUrl(argumentsList[0]);
+        return target.apply(thisArg, argumentsList);
+    }
+});
 
 Debug.log('✅ FreedomRuntime Loaded');
 DOM.runDomClock();
