@@ -14,7 +14,7 @@ export default class DOM {
                     return;
 
                 await async.forEach(addedNodes, addedNode => {
-                    const $elm = $(addedNode);
+                    const $elm = $(_.first(addedNode));
                     const tagName = _.toLower($elm.prop('tagName'));
                     const src = $elm.attr('src');
                     const style = $elm.attr('style');
