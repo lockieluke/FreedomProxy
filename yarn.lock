@@ -1455,7 +1455,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/fs-extra@npm:^11":
+"@types/fs-extra@npm:^11.0.1":
   version: 11.0.1
   resolution: "@types/fs-extra@npm:11.0.1"
   dependencies:
@@ -2889,7 +2889,7 @@ __metadata:
     "@tomphttp/bare-client": ^1.1.2-beta.3
     "@tomphttp/bare-server-node": ^1.2.6
     "@types/blocked-at": ^1.0.1
-    "@types/fs-extra": ^11
+    "@types/fs-extra": ^11.0.1
     "@types/is-url": ^1.2.30
     "@types/lodash-es": ^4.17.7
     "@types/node": ^20.2.5
@@ -2924,7 +2924,7 @@ __metadata:
     postcss: ^8.4.24
     react: ^18.2.0
     react-dom: ^18.2.0
-    react-icons: ^4.8.0
+    react-icons: ^4.9.0
     react-if: ^4.1.4
     rimraf: ^5.0.1
     store2: ^2.14.2
@@ -4659,6 +4659,15 @@ __metadata:
   peerDependencies:
     react: "*"
   checksum: 4dbba7ad989c295b410e19b2a702722dae44368cb04b6515f9471353552f31ac80bd350f121d5bff79f81504b84039ede44d09e9f035f48bb1032e6eace126c4
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "react-icons@npm:4.9.0"
+  peerDependencies:
+    react: "*"
+  checksum: 69d1000d02349cf4baa78a0882aff09723d348d910256ea7489dea777abf10f158b27c1b5d3b1d2ec030e21320eae0afcc13f9c9d11afb85a8809c59a23a923c
   languageName: node
   linkType: hard
 

@@ -17,7 +17,7 @@
   "devDependencies": {
     "@parcel/transformer-sass": "2.9.1",
     "@types/blocked-at": "^1.0.1",
-    "@types/fs-extra": "^11",
+    "@types/fs-extra": "^11.0.1",
     "@types/is-url": "^1.2.30",
     "@types/lodash-es": "^4.17.7",
     "@types/node": "^20.2.5",
@@ -65,7 +65,7 @@
     "normalize-url": "^8.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.8.0",
+    "react-icons": "^4.9.0",
     "react-if": "^4.1.4",
     "store2": "^2.14.2",
     "universal-user-agent": "^7.0.1",
