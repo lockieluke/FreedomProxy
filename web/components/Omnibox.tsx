@@ -3,7 +3,7 @@
 import {Button, Spinner} from "flowbite-react";
 import normalizeUrl from "normalize-url";
 import {useContext, useEffect, useRef} from "react";
-import {AiOutlineArrowRight} from "react-icons/all";
+import {AiOutlineArrowRight} from "react-icons/ai";
 import {Else, If, Then} from "react-if";
 import store from "store2";
 import {SharedCTX} from "../ctx";
@@ -65,8 +65,8 @@ export default function Omnibox() {
                 </Then>
                 <Else>
                     <Button className="cursor-default" gradientDuoTone="purpleToBlue" outline title="Go"
-                            disabled={!sharedCTX.connected}>
-                        <AiOutlineArrowRight onClick={handleOmniboxSubmit}/>
+                            disabled={!sharedCTX.connected} onClick={handleOmniboxSubmit}>
+                        <AiOutlineArrowRight />
                     </Button>
                 </Else>
             </If>
