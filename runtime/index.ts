@@ -1,20 +1,15 @@
-import isRelativeUrl from "is-relative-url";
 import * as _ from 'lodash-es';
 import Debug from "./debug";
 import DOM from "./dom";
-import isUrl = require('is-url');
+import Utils from "./utils";
 
 declare const targetUrl: string, serverUrl: string;
 
-const oldXHROpen = window.XMLHttpRequest.prototype.open;
-
+const oldXMLOpen = XMLHttpRequest.prototype.open;
 // @ts-ignore
-window.XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
-    const urlStr = _.toString(url);
-    if (isUrl(urlStr) && !isRelativeUrl(urlStr))
-        url = `${serverUrl}/mask?url=${url}`;
-    return oldXHROpen.call(this, method, url, async, user, password);
-};
+XMLHttpRequest.prototype.open = function (method: string, url: string, async: boolean, user?: string | null, password?: string | null) {
+    return oldXMLOpen.call(this, method, Utils.rewriteUrl(url), async, user, password);
+}
 
 window.history.pushState = _.constant(void 0);
 window.history.replaceState = _.constant(void 0);
