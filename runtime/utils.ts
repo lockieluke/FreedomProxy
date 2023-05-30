@@ -11,9 +11,13 @@ export default class Utils {
     }
 
     static rewriteUrl(url: string, origin: string = window['targetUrl']) {
-        if (url.startsWith(window['serverUrl']) || validDataUrl(url))
+        if (Utils.isUrlRewritten(url))
             return url;
         return `${window['serverUrl']}/mask?url=${encodeURIComponent(isRelativeUrl(url) ? _.toString(new URL(url, window['targetUrl'])) : url)}&origin=${encodeURIComponent(origin)}`;
+    }
+
+    static isUrlRewritten(url: string) {
+        return url.startsWith(window['serverUrl']) || validDataUrl(url);
     }
 
     static postMessageAndAwaitResponse(message: any, target: Window = parent) {

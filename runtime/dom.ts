@@ -48,8 +48,9 @@ export default class DOM {
                         needReplacing = true;
                     }
 
-                    if (needReplacing)
+                    if (needReplacing) {
                         $elm.replaceWith($newElm);
+                    }
                 });
             });
         });
@@ -81,8 +82,9 @@ export default class DOM {
         Element.prototype.setAttribute = new Proxy(Element.prototype.setAttribute, {
             apply: function (target, thisArg, argumentsList) {
                 // Uncaught RangeError: Maximum call stack size exceeded if not deferred
-                _.defer(() => {
-                    DOM.rewriteAttributes(thisArg, { [argumentsList[0]]: argumentsList[1] });
+                requestAnimationFrame(() => {
+                    if (!Utils.isUrlRewritten(argumentsList[1]))
+                        DOM.rewriteAttributes(thisArg, { [argumentsList[0]]: argumentsList[1] });
                     return target.apply(thisArg, argumentsList);
                 });
             }
@@ -135,18 +137,11 @@ export default class DOM {
 
     static rewriteAttributes(element: Element, newValues: any = {}) {
         if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
-            const src = newValues['src'] ?? element.getAttribute('src');
-            const dataSrc = newValues['data-src'] ?? element.getAttribute('data-src');
-            const href = newValues['href'] ?? element.getAttribute('href');
-
-            if (_.isString(src))
-                element.setAttribute('src', Utils.rewriteUrl(src));
-
-            if (_.isString(href))
-                element.setAttribute('href', Utils.rewriteUrl(href));
-
-            if (_.isString(dataSrc))
-                element.setAttribute('data-src', Utils.rewriteUrl(dataSrc));
+            async.forEach(['src', 'href', 'data-src'], attribute => {
+                const value = newValues[attribute] ?? element.getAttribute(attribute);
+                if (_.isString(value))
+                    element.setAttribute(attribute, Utils.rewriteUrl(value));
+            })
         }
     }
 
