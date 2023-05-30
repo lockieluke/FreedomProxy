@@ -4,8 +4,6 @@ import * as _ from 'lodash-es';
 import nodeFetch, {HeadersInit} from "node-fetch";
 import Config from "./config";
 
-const fetch = fetchCookie(nodeFetch);
-
 export default class Network {
 
     static currentAddress: string;
@@ -31,7 +29,7 @@ export default class Network {
     }
 
     static async fetchHTML(url: URL, req: FastifyRequest): Promise<string> {
-        const response = await fetch(_.toString(url), {
+        const response = await Network.fetchWithCookie(_.toString(url), {
             headers: {
                 ...Network.defaultHeaders(req)
             },
@@ -44,5 +42,7 @@ export default class Network {
 
         return await response.text();
     }
+
+    static fetchWithCookie = fetchCookie(nodeFetch);
 
 }

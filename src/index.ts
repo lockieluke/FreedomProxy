@@ -1,17 +1,17 @@
+import fastifyCors from '@fastify/cors';
 import fastifyWebsocket from "@fastify/websocket";
 import createBareServer from '@tomphttp/bare-server-node';
-import * as cheerio from 'cheerio';
+import arrayBufferToBuffer from 'arraybuffer-to-buffer';
 import blocked from 'blocked-at';
+import * as cheerio from 'cheerio';
 import dotenv from 'dotenv';
 import fastify from "fastify";
-import fastifyCors from '@fastify/cors';
 import fastifyGracefulShutdown from "fastify-graceful-shutdown";
-import arrayBufferToBuffer from 'arraybuffer-to-buffer';
 import fs from "fs-extra";
 import nodeHttp from 'http';
 import {resolve} from "import-meta-resolve";
 import * as _ from 'lodash-es';
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 import * as path from "path";
 import url from "url";
 import Network from "./network";
@@ -50,7 +50,9 @@ const app = fastify({
     trustProxy: true
 });
 app.register(fastifyGracefulShutdown);
-app.register(fastifyCors);
+app.register(fastifyCors, {
+    credentials: true
+});
 app.register(fastifyWebsocket);
 app.register(async fastify => {
     fastify.get<{
@@ -129,35 +131,37 @@ app.register(async fastify => {
 
 app.get<{
     Querystring: {
-        url: string
+        url: string;
+        origin: string;
     }
 }>('/mask', async (req, res) => {
-    const {url} = req.query;
+    const {url, origin} = _.mapValues(req.query, decodeURIComponent);
     if (_.isNil(url))
-        return res.status(400).send({
+        return res.status(400).header('content-type', 'application/json').send({
             error: 'Missing URL',
             errorType: 'missing-url'
         });
 
+
     // pipe response
     const response = await fetch(url, {
-        headers: Network.defaultHeaders(req)
+        headers: _.merge(Network.defaultHeaders(req), _.pick(req.headers, ['accept']))
     });
     if (!response.ok)
-        return res.status(response.status).send({
-            error: 'Failed to fetch masked URL',
+        return res.status(response.status).header('content-type', 'application/json').send({
+            error: `Failed to fetch masked URL: ${response.statusText}`,
             errorType: 'fetch-failed'
         });
-
-    const contentType = response.headers.get('content-type');
-    if (_.isNil(contentType))
-        return res.status(500).send({
-            error: 'Missing content-type header',
-            errorType: 'missing-content-type'
-        });
-
     const buffer = await response.arrayBuffer();
-    return res.header('content-type', contentType).send(arrayBufferToBuffer(buffer));
+
+    // Remove content-encoding header to prevent double compression, and copy all other headers
+    const responseHeaders = response.headers;
+    responseHeaders.delete('content-encoding');
+    responseHeaders.forEach((value, key) => res.header(_.toLower(key), value))
+
+    res.header('access-control-allow-origin', 'null');
+    res.header('origin', origin);
+    return res.send(arrayBufferToBuffer(buffer));
 });
 
 app.post<{
