@@ -42,8 +42,10 @@ export default class DOM {
                     if (style) {
                         // Rewrite url() in style
                         const [newStyle, styleNeedReplacing] = DOM.rewriteStyle(style);
+                        if (!styleNeedReplacing)
+                            return;
                         $newElm.attr('style', newStyle);
-                        needReplacing = needReplacing || styleNeedReplacing;
+                        needReplacing = true;
                     }
 
                     if (needReplacing)
@@ -57,7 +59,7 @@ export default class DOM {
             subtree: true,
             attributes: true,
             attributeOldValue: true,
-            attributeFilter: ['src', 'style', 'href']
+            attributeFilter: ['src', 'data-src', 'style', 'href']
         });
     }
 
@@ -76,9 +78,19 @@ export default class DOM {
             }
         });
 
+        Element.prototype.setAttribute = new Proxy(Element.prototype.setAttribute, {
+            apply: function (target, thisArg, argumentsList) {
+                // Uncaught RangeError: Maximum call stack size exceeded if not deferred
+                _.defer(() => {
+                    DOM.rewriteAttributes(thisArg, { [argumentsList[0]]: argumentsList[1] });
+                    return target.apply(thisArg, argumentsList);
+                });
+            }
+        });
+
         (async () => {
             await async.forEach([HTMLImageElement, HTMLScriptElement, HTMLDivElement], async elementType => {
-                await async.forEach(['src', 'href'], elementAttribute => {
+                await async.forEach(['src', 'href', 'data-src'], elementAttribute => {
                     DOM.interceptAttributeSet(elementType.prototype, elementAttribute, function (value) {
                         DOM.rewriteAttributes(this, { [elementAttribute]: _.toString(value) });
                     });
@@ -124,19 +136,17 @@ export default class DOM {
     static rewriteAttributes(element: Element, newValues: any = {}) {
         if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
             const src = newValues['src'] ?? element.getAttribute('src');
+            const dataSrc = newValues['data-src'] ?? element.getAttribute('data-src');
             const href = newValues['href'] ?? element.getAttribute('href');
-            // const style = newValues['style'] ?? element.getAttribute('style');
 
-            if (src)
+            if (_.isString(src))
                 element.setAttribute('src', Utils.rewriteUrl(src));
 
-            if (href)
+            if (_.isString(href))
                 element.setAttribute('href', Utils.rewriteUrl(href));
 
-            // console.log(style, DOM.rewriteStyle(style)[0]);
-
-            // if (style)
-            //     element.setAttribute('style', DOM.rewriteStyle(style)[0]);
+            if (_.isString(dataSrc))
+                element.setAttribute('data-src', Utils.rewriteUrl(dataSrc));
         }
     }
 
