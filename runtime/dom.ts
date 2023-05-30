@@ -48,9 +48,8 @@ export default class DOM {
                         needReplacing = true;
                     }
 
-                    if (needReplacing) {
+                    if (needReplacing)
                         $elm.replaceWith($newElm);
-                    }
                 });
             });
         });
@@ -81,20 +80,18 @@ export default class DOM {
 
         Element.prototype.setAttribute = new Proxy(Element.prototype.setAttribute, {
             apply: function (target, thisArg, argumentsList) {
-                // Uncaught RangeError: Maximum call stack size exceeded if not deferred
-                _.defer(() => {
-                    if (_.isString(argumentsList[1]) && !Utils.isUrlRewritten(argumentsList[1]))
-                        DOM.rewriteAttributes(thisArg, { [argumentsList[0]]: argumentsList[1] });
-                    return target.apply(thisArg, argumentsList);
-                });
+                // Uncaught RangeError: Maximum call stack size exceeded happens sometimes, rewriteAttributes has to be extremely optimised and fast
+                argumentsList[1] = DOM.rewriteAttribute(argumentsList[0], argumentsList[1]);
+                return target.apply(thisArg, argumentsList);
             }
         });
 
         (async () => {
-            await async.forEach([HTMLImageElement, HTMLScriptElement, HTMLDivElement], async elementType => {
+            const elementTypes = [HTMLImageElement, HTMLScriptElement, HTMLDivElement, HTMLElement];
+            await async.forEach(elementTypes, async elementType => {
                 await async.forEach(['src', 'href', 'data-src'], elementAttribute => {
                     DOM.interceptAttributeSet(elementType.prototype, elementAttribute, function (value) {
-                        DOM.rewriteAttributes(this, { [elementAttribute]: _.toString(value) });
+                        this.setAttribute(elementAttribute, value);
                     });
                 });
             });
@@ -135,22 +132,24 @@ export default class DOM {
         return [newStyle, needReplacing];
     }
 
-    static rewriteAttributes(element: Element, newValues: any = {}) {
-        if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
-            // _.forEach(['src', 'href', 'data-src', 'style'], attribute => {
-            //     const value = newValues[attribute] ?? element.getAttribute(attribute);
-            //
-            //     if (attribute === 'style') {
-            //         return;
-            //     }
-            //
-            //     if (_.isString(value))
-            //         element.setAttribute(attribute, Utils.rewriteUrl(value));
-            // })
+    static rewriteAttribute(attr: string, value: string): string {
+        if (attr === 'style') {
+            const [newStyle, styleNeedReplacing] = DOM.rewriteStyle(_.toString(value));
+            if (styleNeedReplacing)
+                return newStyle;
+        }
 
-            const src = newValues['src'] ?? element.getAttribute('src');
-            if (_.isString(src))
-                element.setAttribute('src', Utils.rewriteUrl(src));
+        if (['src', 'href', 'data-src'].includes(attr) && _.isString(value) && !Utils.isUrlRewritten(value))
+            return Utils.rewriteUrl(value);
+
+        return value;
+    }
+
+    static rewriteAttributes(element: Element) {
+        if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
+            element.getAttributeNames().forEach(attribute => {
+                element.setAttribute(attribute, element.getAttribute(attribute));
+            });
         }
     }
 
