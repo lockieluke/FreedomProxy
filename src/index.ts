@@ -145,7 +145,7 @@ app.all<{
         origin: string;
     }
 }>('/mask', async (req, res) => {
-    const {url, origin} = _.mapValues(req.query, decodeURIComponent);
+    const {url, origin} = _.mapValues(req.query, value => decodeURIComponent(atob(value)));
     if (_.isNil(url))
         return res.status(400).header('content-type', 'application/json').send({
             error: 'Missing URL',

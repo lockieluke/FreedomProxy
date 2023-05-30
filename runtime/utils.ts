@@ -1,7 +1,7 @@
 /// <reference types="user-agent-data-types" />
 
-import * as _ from 'lodash-es';
 import isRelativeUrl from "is-relative-url";
+import * as _ from 'lodash-es';
 import validDataUrl from 'valid-data-url';
 
 export default class Utils {
@@ -13,7 +13,7 @@ export default class Utils {
     static rewriteUrl(url: string, origin: string = window['targetUrl']) {
         if (Utils.isUrlRewritten(url))
             return url;
-        return `${window['serverUrl']}/mask?url=${encodeURIComponent(isRelativeUrl(url) ? _.toString(new URL(url, window['targetUrl'])) : url)}&origin=${encodeURIComponent(origin)}`;
+        return `${window['serverUrl']}/mask?url=${btoa(encodeURIComponent(isRelativeUrl(url) ? _.toString(new URL(url, window['targetUrl'])) : url))}&origin=${btoa(encodeURIComponent(origin))}`;
     }
 
     static isUrlRewritten(url: string) {
