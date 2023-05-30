@@ -14,6 +14,7 @@ import * as _ from 'lodash-es';
 import fetch from "node-fetch";
 import * as path from "path";
 import url from "url";
+import Msgpack from "../shared/msgpack";
 import Network from "./network";
 import {cssAbsolutifyUrls, htmlAbsolutifyUrls} from "./preprocessing";
 
@@ -67,13 +68,13 @@ app.register(async fastify => {
         });
 
         conn.socket.on('message', async rawMessage => {
-            const payload = JSON.parse(_.toString(rawMessage));
+            const payload = JSON.parse(Msgpack.decodeFromString(_.toString(rawMessage)));
             const route = payload.route;
             const send = (payload: any, error: boolean = false) => {
-                conn.socket.send(JSON.stringify(error ? {...payload, 'ogRoute': route} : {
+                conn.socket.send(Msgpack.encodeToString(JSON.stringify(error ? {...payload, 'ogRoute': route} : {
                     ...payload,
                     'route': `${route}-response`
-                }));
+                })));
             }
 
             switch (route) {

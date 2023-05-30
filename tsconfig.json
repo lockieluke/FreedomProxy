@@ -3,7 +3,7 @@
     "module": "ESNext",
     "target": "ES2022",
     "moduleResolution": "Node",
-    "rootDir": "src",
+    "rootDirs": ["src", "shared"],
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,

@@ -1,3 +1,4 @@
+import Msgpack from "../shared/msgpack";
 import {ClientIPInfo} from "./analytics";
 
 export default class Helper {
@@ -27,7 +28,7 @@ export default class Helper {
     send(route: string, payload: any = {}) {
         return new Promise<any>((resolve, reject) => {
             const receiveCB = event => {
-                const data = JSON.parse(event.data);
+                const data = JSON.parse(Msgpack.decodeFromString(event.data));
                 if (data.route === `${route}-response`) {
                     this.ws.removeEventListener('message', receiveCB);
                     resolve(data);
@@ -40,10 +41,10 @@ export default class Helper {
             }
             this.ws.addEventListener('message', receiveCB);
 
-            this.ws.send(JSON.stringify({
+            this.ws.send(Msgpack.encodeToString(JSON.stringify({
                 route,
                 ...payload
-            }));
+            })));
         })
     }
 

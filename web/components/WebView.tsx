@@ -1,5 +1,5 @@
-import {useContext, useEffect, useRef} from "react";
 import * as _ from 'lodash-es';
+import {useContext, useEffect, useRef} from "react";
 import {SharedCTX} from "../ctx";
 
 export default function WebView() {
@@ -13,7 +13,7 @@ export default function WebView() {
         console.log(`🌐 Loading URL: ${url}`);
 
         (async () => {
-            const data = await window.helper.send('get-html', {
+            const data = await window['helper'].send('get-html', {
                 url
             });
 
