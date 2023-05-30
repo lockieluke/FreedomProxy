@@ -93,6 +93,15 @@ export default class DOM {
         })
     }
 
+    static passDomEventsToUI() {
+        window.addEventListener('keydown', event => {
+            if (Utils.controlKey(event) && event.shiftKey && event.key === 'l') {
+                event.preventDefault();
+                parent.postMessage('omnibox.focus', '*');
+            }
+        });
+    }
+
     static rewriteStyle(style: string): [string, boolean] {
         let needReplacing = false;
         const newStyle = style.replace(/url\((.*?)\)/g, (match, p1) => {

@@ -23,7 +23,14 @@ export default function Omnibox() {
                 event.preventDefault();
                 omniboxRef.current.focus();
             }
-        })
+        });
+
+        window.addEventListener('message', event => {
+            const data = event.data;
+
+            if (data === 'omnibox.focus')
+                omniboxRef.current.focus();
+        });
 
         omniboxRef.current.value = store.get("omnibox.lastInput") || "";
     }, []);
