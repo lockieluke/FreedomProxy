@@ -2,6 +2,7 @@
 
 import {Button, Spinner} from "flowbite-react";
 import normalizeUrl from "normalize-url";
+import * as _ from "lodash-es";
 import {useContext, useEffect, useRef} from "react";
 import {AiOutlineArrowRight} from "react-icons/ai";
 import {Else, If, Then} from "react-if";
@@ -26,9 +27,11 @@ export default function Omnibox() {
         });
 
         window.addEventListener('message', event => {
-            const data = event.data;
+            const data = _.attempt(eventData => JSON.parse(eventData), JSON.stringify(event.data));
+            if (_.isError(data))
+                return;
 
-            if (data === 'omnibox.focus')
+            if (data['type'] === 'omnibox.focus')
                 omniboxRef.current.focus();
         });
 

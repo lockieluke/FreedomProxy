@@ -2,7 +2,7 @@ import $ from 'cash-dom';
 import * as _ from 'lodash-es';
 import * as async from 'modern-async';
 import validDataUrl from 'valid-data-url';
-import Debug from "./debug";
+import Extension from "./extensions";
 import Utils from "./utils";
 
 export default class DOM {
@@ -14,8 +14,13 @@ export default class DOM {
                 if (_.isEmpty(addedNodes))
                     return;
 
-                await async.forEach(addedNodes, addedNode => {
+                await async.forEach(addedNodes, async addedNode => {
                     const $elm = $(_.first(addedNode));
+                    await async.forEach((window['extensions'] as Extension[]) ?? [], extension => {
+                        if (_.isFunction(extension.onDomNodeAdded))
+                            extension.onDomNodeAdded($elm);
+                    });
+
                     const tagName = _.toLower($elm.prop('tagName'));
                     const src = $elm.attr('src');
                     const style = $elm.attr('style');
@@ -97,7 +102,9 @@ export default class DOM {
         window.addEventListener('keydown', event => {
             if (Utils.controlKey(event) && event.shiftKey && event.key === 'l') {
                 event.preventDefault();
-                parent.postMessage('omnibox.focus', '*');
+                parent.postMessage({
+                    type: 'omnibox.focus'
+                }, '*');
             }
         });
     }

@@ -1,5 +1,8 @@
+import $ from "cash-dom";
+import * as async from 'modern-async';
 import Debug from "./debug";
 import DOM from "./dom";
+import CookiePopupBlocker from "./extensions/cookiePopupBlocker";
 import Fetching from "./fetching";
 import History from "./history";
 import Navigator from "./navigator";
@@ -14,6 +17,17 @@ History.interceptHistoryActions();
 DOM.passDomEventsToUI();
 DOM.interceptDomActions();
 DOM.runDomClock();
+
+$(async () => {
+    performance.mark('extensionsStart');
+    const extensions = [new CookiePopupBlocker()];
+    await async.forEach(extensions, extension => extension.onInit());
+    window['extensions'] = extensions;
+    performance.mark('extensionsEnd');
+
+    const extensionLoadPerf = performance.measure('FreedomExtensions', 'extensionsStart', 'extensionsEnd');
+    Debug.log(`✅ Extensions loaded in ${extensionLoadPerf.duration.toFixed(2)}ms`);
+});
 
 performance.mark('end');
 const startupPerf = performance.measure('FreedomRuntime', 'start', 'end');

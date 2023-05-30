@@ -117,7 +117,16 @@ app.register(async fastify => {
                             baseURI: _.toString(url)
                         })
                     });
-                    break
+                    break;
+
+                case 'cookie-popup-blocker-get-block-list':
+                    const response = await fetch('https://www.i-dont-care-about-cookies.eu/abp/');
+                    const text = await response.text();
+
+                    send({
+                        blockList: text
+                    });
+                    break;
 
                 default:
                     send({

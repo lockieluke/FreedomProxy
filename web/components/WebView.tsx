@@ -23,6 +23,6 @@ export default function WebView() {
         })();
     }, [sharedCTX.url]);
 
-    return (<iframe ref={iframeRef} sandbox="allow-downloads allow-forms allow-modals allow-popups allow-scripts allow-same-origin" className="w-screen flex-1">
+    return (<iframe ref={iframeRef} id="webview" sandbox="allow-downloads allow-forms allow-modals allow-popups allow-scripts allow-same-origin" className="w-screen flex-1">
     </iframe>);
 }
