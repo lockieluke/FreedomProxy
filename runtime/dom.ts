@@ -1,9 +1,9 @@
 import $ from 'cash-dom';
 import * as _ from 'lodash-es';
 import * as async from 'modern-async';
-import validDataUrl from 'valid-data-url';
+import validDataUrl = require('valid-data-url');
 import Extension from "./extensions";
-import Utils from "./utils";
+import Utils from "../shared/utils";
 
 export default class DOM {
 
@@ -82,8 +82,8 @@ export default class DOM {
         Element.prototype.setAttribute = new Proxy(Element.prototype.setAttribute, {
             apply: function (target, thisArg, argumentsList) {
                 // Uncaught RangeError: Maximum call stack size exceeded if not deferred
-                requestAnimationFrame(() => {
-                    if (!Utils.isUrlRewritten(argumentsList[1]))
+                _.defer(() => {
+                    if (_.isString(argumentsList[1]) && !Utils.isUrlRewritten(argumentsList[1]))
                         DOM.rewriteAttributes(thisArg, { [argumentsList[0]]: argumentsList[1] });
                     return target.apply(thisArg, argumentsList);
                 });
@@ -137,11 +137,20 @@ export default class DOM {
 
     static rewriteAttributes(element: Element, newValues: any = {}) {
         if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
-            async.forEach(['src', 'href', 'data-src'], attribute => {
-                const value = newValues[attribute] ?? element.getAttribute(attribute);
-                if (_.isString(value))
-                    element.setAttribute(attribute, Utils.rewriteUrl(value));
-            })
+            // _.forEach(['src', 'href', 'data-src', 'style'], attribute => {
+            //     const value = newValues[attribute] ?? element.getAttribute(attribute);
+            //
+            //     if (attribute === 'style') {
+            //         return;
+            //     }
+            //
+            //     if (_.isString(value))
+            //         element.setAttribute(attribute, Utils.rewriteUrl(value));
+            // })
+
+            const src = newValues['src'] ?? element.getAttribute('src');
+            if (_.isString(src))
+                element.setAttribute('src', Utils.rewriteUrl(src));
         }
     }
 

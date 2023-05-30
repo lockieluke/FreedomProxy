@@ -1,6 +1,6 @@
 import {Cash} from "cash-dom";
 import * as _ from 'lodash-es';
-import Utils from "../utils";
+import Utils from "../../shared/utils";
 import Extension from "./index";
 
 export default class CookiePopupBlocker extends Extension {

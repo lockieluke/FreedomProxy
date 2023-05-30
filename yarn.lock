@@ -1547,6 +1547,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/valid-data-url@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@types/valid-data-url@npm:2.0.0"
+  checksum: 562b8c12f76c3ed6712672f45c4d6301a2899ef039acf18971cea9ad3d6c975004f52651edbd4441a5aa668346da1ff016472bf476be92f06086698660493a50
+  languageName: node
+  linkType: hard
+
 "@types/watch@npm:^1.0.3":
   version: 1.0.3
   resolution: "@types/watch@npm:1.0.3"
@@ -1880,6 +1887,13 @@ __metadata:
   dependencies:
     fill-range: ^7.0.1
   checksum: e2a8e769a863f3d4ee887b5fe21f63193a891c68b612ddb4b68d82d1b5f3ff9073af066c343e9867a393fe4c2555dcb33e89b937195feb9c1613d259edfcd459
+  languageName: node
+  linkType: hard
+
+"browser-or-node@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "browser-or-node@npm:2.1.1"
+  checksum: b1650b579345574d2c1905c73d385915a032523066ef9589036cf129b23b27b85096b6713476dffb88feb83cda798ed0774363e699117aa2724a0409adea25aa
   languageName: node
   linkType: hard
 
@@ -2896,12 +2910,14 @@ __metadata:
     "@types/react": ^18.2.7
     "@types/react-dom": ^18.2.4
     "@types/uglify-js": ^3.17.1
+    "@types/valid-data-url": ^2.0.0
     "@types/watch": ^1.0.3
     "@types/ws": ^8.5.4
     arraybuffer-to-buffer: ^0.0.7
     autoprefixer: ^10.4.14
     await-to-js: ^3.0.0
     blocked-at: ^1.2.0
+    browser-or-node: ^2.1.1
     cash-dom: ^8.1.5
     cheerio: ^1.0.0-rc.12
     concurrently: ^8.0.1

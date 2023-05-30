@@ -1,4 +1,4 @@
-import Utils from "./utils";
+import Utils from "../shared/utils";
 
 export default class Fetching {
 

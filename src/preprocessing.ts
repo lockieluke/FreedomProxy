@@ -1,7 +1,7 @@
 import {CheerioAPI} from "cheerio";
 import isRelativeUrl from "is-relative-url";
 import * as _ from 'lodash-es';
-import Network from "./network";
+import Utils from "../shared/utils";
 
 export function htmlAbsolutifyUrls(baseUrl: string, $: CheerioAPI) {
     const selector = [
@@ -28,7 +28,7 @@ export function htmlAbsolutifyUrls(baseUrl: string, $: CheerioAPI) {
         const resolveUrl = (url: string, attr: 'src' | 'href' | 'srcset' | 'content') => {
             if (attr === 'srcset') {
                 const urls = url.split(',').map(url => url.trim().split(' ')[0]);
-                const absoluteUrls = urls.map(thisUrl => `${Network.currentAddress}/mask?url=${_.toString(new URL(thisUrl, baseUrl))}`);
+                const absoluteUrls = urls.map(thisUrl => Utils.rewriteUrl(thisUrl, baseUrl));
                 const absoluteSrcset = absoluteUrls.join(', ');
                 $el.attr(attr, absoluteSrcset);
                 return;
@@ -40,7 +40,7 @@ export function htmlAbsolutifyUrls(baseUrl: string, $: CheerioAPI) {
                     return;
                 }
 
-                const absoluteUrl = `${Network.currentAddress}/mask?url=${new URL(url, baseUrl).toString()}`;
+                const absoluteUrl = Utils.rewriteUrl(url, baseUrl);
                 $el.attr(attr, absoluteUrl);
             }
         }
@@ -64,8 +64,7 @@ export function cssAbsolutifyUrls(baseUrl: string, $: CheerioAPI) {
         const $el = $(el);
         const href = $el.attr('href');
         if (!_.isNil(href)) {
-            const absoluteUrl = `${Network.currentAddress}/mask?url=${new URL(href, baseUrl).toString()}`;
-            $el.attr('href', absoluteUrl);
+            $el.attr('href', Utils.rewriteUrl(href, baseUrl));
         }
     });
 
@@ -75,8 +74,7 @@ export function cssAbsolutifyUrls(baseUrl: string, $: CheerioAPI) {
         if (!_.isNil(css)) {
             const absoluteCss = css.replace(/url\((.*?)\)/g, (match, url) => {
                 if (isRelativeUrl(url)) {
-                    const absoluteUrl = `${Network.currentAddress}/mask?url=${new URL(url, baseUrl).toString()}`;
-                    return `url(${absoluteUrl})`;
+                    return `url(${Utils.rewriteUrl(url, baseUrl)})`;
                 }
                 return match;
             });

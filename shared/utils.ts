@@ -1,23 +1,27 @@
 /// <reference types="user-agent-data-types" />
 
+import {isBrowser} from "browser-or-node";
 import isRelativeUrl from "is-relative-url";
 import * as _ from 'lodash-es';
 import validDataUrl from 'valid-data-url';
+import Network from "../src/network";
+
+declare const serverUrl: string, targetUrl: string;
 
 export default class Utils {
 
     static controlKey(event: KeyboardEvent) {
-        return navigator.userAgentData.platform === 'macOS' ? event.metaKey : event.ctrlKey;
+        return navigator.userAgentData?.platform === 'macOS' ? event.metaKey : event.ctrlKey;
     }
 
-    static rewriteUrl(url: string, origin: string = window['targetUrl']) {
+    static rewriteUrl(url: string, origin: string = targetUrl) {
         if (Utils.isUrlRewritten(url))
             return url;
-        return `${window['serverUrl']}/mask?url=${btoa(encodeURIComponent(isRelativeUrl(url) ? _.toString(new URL(url, window['targetUrl'])) : url))}&origin=${btoa(encodeURIComponent(origin))}`;
+        return `${isBrowser ? serverUrl : Network.currentAddress}/mask?url=${btoa(encodeURIComponent(isRelativeUrl(url) ? _.toString(new URL(url, origin)) : url))}&origin=${btoa(encodeURIComponent(origin))}`;
     }
 
     static isUrlRewritten(url: string) {
-        return url.startsWith(window['serverUrl']) || validDataUrl(url);
+        return url.startsWith(isBrowser ? serverUrl : Network.currentAddress) || validDataUrl(url);
     }
 
     static postMessageAndAwaitResponse(message: any, target: Window = parent) {

@@ -1,5 +1,8 @@
-import * as _ from 'lodash-es';
+import {isBrowser} from "browser-or-node";
 import {getUserAgent} from "universal-user-agent";
+
+if (isBrowser)
+    process = {env: {}} as any;
 
 export default class Config {
 
