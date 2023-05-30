@@ -139,7 +139,7 @@ app.register(async fastify => {
     });
 });
 
-app.get<{
+app.all<{
     Querystring: {
         url: string;
         origin: string;
@@ -155,7 +155,11 @@ app.get<{
 
     // pipe response
     const response = await fetch(url, {
-        headers: _.merge(Network.defaultHeaders(req), _.pick(req.headers, ['accept']))
+        headers: _.merge(Network.defaultHeaders(req), _.pick(req.headers, ['accept'])),
+        method: req.method,
+        redirect: 'follow',
+        follow: 10,
+        ...(req.body ? {body: <any>req.body} : {})
     });
     if (!response.ok)
         return res.status(response.status).header('content-type', 'application/json').send({
