@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react'
+import react from "@vitejs/plugin-react-swc";
 import { viteSingleFile } from "vite-plugin-singlefile";
-import reactRefresh from '@vitejs/plugin-react-refresh';
+import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import inject from "@rollup/plugin-inject";
 
@@ -21,5 +21,5 @@ export default defineConfig({
     },
     plugins: [tsconfigPaths({
         projects: ['tsconfig.web.json']
-    }), react(), reactRefresh(), viteSingleFile()]
+    }), react(), viteSingleFile(), ViteMinifyPlugin()]
 });
