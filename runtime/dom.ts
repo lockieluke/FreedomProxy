@@ -1,9 +1,9 @@
 import $ from 'cash-dom';
 import * as _ from 'lodash-es';
 import * as async from 'modern-async';
-import validDataUrl = require('valid-data-url');
 import Extension from "./extensions";
 import Utils from "../shared/utils";
+import validDataUrl = require('valid-data-url');
 
 export default class DOM {
 
@@ -39,15 +39,6 @@ export default class DOM {
                         needReplacing = true;
                     }
 
-                    if (style) {
-                        // Rewrite url() in style
-                        const [newStyle, styleNeedReplacing] = DOM.rewriteStyle(style);
-                        if (!styleNeedReplacing)
-                            return;
-                        $newElm.attr('style', newStyle);
-                        needReplacing = true;
-                    }
-
                     if (needReplacing)
                         $elm.replaceWith($newElm);
                 });
@@ -58,7 +49,34 @@ export default class DOM {
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ['src', 'style', 'href']
+            attributeFilter: ['src', 'href']
+        });
+
+        // Need separate observer for style attribute for some reason
+        const styleObserver = new MutationObserver(async mutations => {
+            const addedNodes = _.castArray(_.map(mutations, mutation => mutation.target));
+            if (_.isEmpty(addedNodes))
+                return;
+
+            await async.forEach(addedNodes, async addedNode => {
+                const $elm = $(addedNode);
+                const style = $elm.attr('style');
+                if (!style)
+                    return;
+
+                const [newStyle, styleNeedReplacing] = DOM.rewriteStyle(style);
+                if (!styleNeedReplacing)
+                    return;
+
+                $elm.attr('style', newStyle);
+            });
+        });
+
+        styleObserver.observe(document, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style']
         });
     }
 
@@ -122,10 +140,10 @@ export default class DOM {
     static rewriteStyle(style: string): [string, boolean] {
         let needReplacing = false;
         const newStyle = style.replace(/url\((.*?)\)/g, (match, p1) => {
-            if (p1.startsWith(window['serverUrl']) || validDataUrl(p1))
+            if (p1.startsWith(window['serverUrl']) || validDataUrl(p1.replace(/^"(.*)"$/, '$1')))
                 return match;
             needReplacing = true;
-            return `url(${Utils.rewriteUrl(p1)})`;
+            return `url(${Utils.rewriteUrl(p1.replace(/^"(.*)"$/, '$1'))})`;
         });
 
         return [newStyle, needReplacing];
