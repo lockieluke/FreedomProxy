@@ -1,4 +1,4 @@
-import BareClient, {BareFetchInit} from "@tomphttp/bare-client";
+import BareClient, {BareFetchInit, createBareClient} from "@tomphttp/bare-client";
 import $ from 'cash-dom';
 import * as _ from 'lodash-es';
 import * as async from 'modern-async';
@@ -7,7 +7,6 @@ import App from "./components/Root";
 import CookiePopupBlockerResponder from "./extensionResponders/cookiePopupBlocker";
 import Helper from "./helper";
 
-const createBareClient = require('@tomphttp/bare-client');
 
 declare global {
     interface Window {

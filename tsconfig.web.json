@@ -1,0 +1,14 @@
+{
+  "extends": "tsconfig.json",
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src",
+    "runtime"
+  ],
+  "include": ["web"],
+  "compilerOptions": {
+    "rootDir": "web",
+    "esModuleInterop": true
+  }
+}
