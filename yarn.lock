@@ -2453,6 +2453,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.1.1":
+  version: 16.1.1
+  resolution: "dotenv@npm:16.1.1"
+  checksum: e3786267ce7951e747edef6bf45ac60fdba8b846201f82f8811b7222e78aef9cdc51763f07696934d4feebab2ab4d01b1d61ac9301919a8f317dc66672127814
+  languageName: node
+  linkType: hard
+
 "dotenv@npm:^7.0.0":
   version: 7.0.0
   resolution: "dotenv@npm:7.0.0"
@@ -2921,7 +2928,7 @@ __metadata:
     cash-dom: ^8.1.5
     cheerio: ^1.0.0-rc.12
     concurrently: ^8.0.1
-    dotenv: ^16.0.3
+    dotenv: ^16.1.1
     esbuild: ^0.17.19
     fastify: ^4.17.0
     fastify-graceful-shutdown: ^3.4.0
