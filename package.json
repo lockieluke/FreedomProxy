@@ -15,8 +15,9 @@
     "clean": "rimraf dist/"
   },
   "devDependencies": {
-    "@rollup/plugin-inject": "^5.0.3",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@types/blocked-at": "^1.0.1",
+    "@types/events": "^3",
     "@types/fs-extra": "^11.0.1",
     "@types/is-url": "^1.2.30",
     "@types/lodash-es": "^4.17.7",
@@ -52,9 +53,11 @@
     "await-to-js": "^3.0.0",
     "blocked-at": "^1.2.0",
     "browser-or-node": "^2.1.1",
+    "buffer": "^6.0.3",
     "cash-dom": "^8.1.5",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.1.1",
+    "events": "^3.3.0",
     "fastify": "^4.17.0",
     "fastify-graceful-shutdown": "^3.4.0",
     "fetch-cookie": "^2.1.0",
@@ -69,12 +72,14 @@
     "msgpackr": "^1.9.2",
     "node-fetch": "^3.3.1",
     "normalize-url": "^8.0.0",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.9.0",
     "react-if": "^4.1.4",
     "store2": "^2.14.2",
     "universal-user-agent": "^7.0.1",
+    "util": "^0.12.5",
     "valid-data-url": "^4.0.1"
   },
   "alias": {

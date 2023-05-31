@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import inject from "@rollup/plugin-inject";
+import {NodeGlobalsPolyfillPlugin} from "@esbuild-plugins/node-globals-polyfill";
 
 export default defineConfig({
     root: 'web/',
@@ -12,12 +12,32 @@ export default defineConfig({
             input: {
                 app: 'web/index.html'
             },
-            plugins: [inject({ Buffer: ['buffer', 'Buffer'] })]
         },
         outDir: '../dist/',
         emptyOutDir: false,
         minify: true,
         cssMinify: true
+    },
+    optimizeDeps: {
+        esbuildOptions: {
+            define: {
+                global: "globalThis",
+            },
+            plugins: [
+                NodeGlobalsPolyfillPlugin({
+                    process: true,
+                    buffer: true,
+                })
+            ],
+        }
+    },
+    resolve: {
+        alias: {
+            process: "process/browser",
+            stream: "stream-browserify",
+            zlib: "browserify-zlib",
+            util: "util",
+        },
     },
     plugins: [tsconfigPaths({
         projects: ['tsconfig.web.json']
