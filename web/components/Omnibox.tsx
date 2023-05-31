@@ -8,7 +8,9 @@ import {AiOutlineArrowRight} from "react-icons/ai";
 import {Else, If, Then} from "react-if";
 import store from "store2";
 import {SharedCTX} from "../ctx";
-import isUrl = require("is-url");
+
+// @ts-ignore
+import isUrl from 'is-url';
 
 export default function Omnibox() {
     const sharedCTX = useContext(SharedCTX);
