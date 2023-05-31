@@ -58,8 +58,7 @@ export default class DOM {
             childList: true,
             subtree: true,
             attributes: true,
-            attributeOldValue: true,
-            attributeFilter: ['src', 'data-src', 'style', 'href']
+            attributeFilter: ['src', 'style', 'href']
         });
     }
 
@@ -89,7 +88,7 @@ export default class DOM {
         (async () => {
             const elementTypes = [HTMLImageElement, HTMLScriptElement, HTMLDivElement, HTMLElement];
             await async.forEach(elementTypes, async elementType => {
-                await async.forEach(['src', 'href', 'data-src'], elementAttribute => {
+                await async.forEach(['src', 'href'], elementAttribute => {
                     DOM.interceptAttributeSet(elementType.prototype, elementAttribute, function (value) {
                         this.setAttribute(elementAttribute, value);
                     });
@@ -139,7 +138,7 @@ export default class DOM {
                 return newStyle;
         }
 
-        if (['src', 'href', 'data-src'].includes(attr) && _.isString(value) && !Utils.isUrlRewritten(value))
+        if (['src', 'href'].includes(attr) && _.isString(value) && !Utils.isUrlRewritten(value))
             return Utils.rewriteUrl(value);
 
         return value;
