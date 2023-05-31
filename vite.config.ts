@@ -11,7 +11,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 app: 'web/index.html'
-            },
+            }
         },
         outDir: '../dist/',
         emptyOutDir: false,
@@ -29,6 +29,8 @@ export default defineConfig({
                     buffer: true,
                 })
             ],
+            treeShaking: true,
+            minify: true
         }
     },
     resolve: {
@@ -37,6 +39,7 @@ export default defineConfig({
             stream: "stream-browserify",
             zlib: "browserify-zlib",
             util: "util",
+            '@assets': '/assets'
         },
     },
     plugins: [tsconfigPaths({

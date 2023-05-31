@@ -7,7 +7,6 @@ import App from "./components/Root";
 import CookiePopupBlockerResponder from "./extensionResponders/cookiePopupBlocker";
 import Helper from "./helper";
 
-
 declare global {
     interface Window {
         helper: Helper;

@@ -9,6 +9,10 @@
   "include": ["web"],
   "compilerOptions": {
     "rootDir": "web",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@assets/*": ["web/assets/*"]
+    },
+    "jsx": "react"
   }
 }
