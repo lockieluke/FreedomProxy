@@ -7,10 +7,10 @@
     "build:server": "tsx build.ts",
     "build:web": "parcel build web/index.html",
     "build:runtime": "tsx build-runtime.ts",
-    "watch:server": "watch \"tsx build.ts\" src/",
+    "watch:server": "chokidar --initial --silent \"src/**/*.ts\" -c \"tsx build.ts\"",
     "dev:server": "tsx watch src/index.ts",
-    "dev:web": "watch \"parcel build web/index.html\" web/",
-    "dev:runtime": "watch \"tsx build-runtime.ts\" runtime/",
+    "dev:web": "chokidar --initial --silent \"web/**/*.ts\" \"web/**/*.tsx\" -c \"parcel build web/index.html\"",
+    "dev:runtime": "chokidar --initial --silent \"runtime/**/*.ts\" -c \"tsx build-runtime.ts\"",
     "dev": "concurrently --kill-others \"npm:dev:server\" \"npm:dev:web\" \"npm:dev:runtime\"",
     "clean": "rimraf dist/"
   },
@@ -25,9 +25,9 @@
     "@types/react-dom": "^18.2.4",
     "@types/uglify-js": "^3.17.1",
     "@types/valid-data-url": "^2.0.0",
-    "@types/watch": "^1.0.3",
     "@types/ws": "^8.5.4",
     "autoprefixer": "^10.4.14",
+    "chokidar-cli": "^3.0.0",
     "concurrently": "^8.0.1",
     "esbuild": "^0.17.19",
     "parcel": "^2.9.1",
@@ -37,8 +37,7 @@
     "tsx": "^3.12.7",
     "typescript": "^5.0.4",
     "uglify-js": "^3.17.4",
-    "user-agent-data-types": "^0.3.1",
-    "watch": "^1.0.2"
+    "user-agent-data-types": "^0.3.1"
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
