@@ -1,6 +1,7 @@
 /// <reference types="user-agent-data-types" />
 
-import {Button, Spinner} from "flowbite-react";
+import $ from 'cash-dom';
+import {Button, Dropdown, Spinner} from "flowbite-react";
 import normalizeUrl from "normalize-url";
 import * as _ from "lodash-es";
 import {useContext, useEffect, useRef} from "react";
@@ -11,6 +12,8 @@ import {SharedCTX} from "../ctx";
 
 // @ts-ignore
 import isUrl from 'is-url';
+import {BsDot} from "react-icons/bs";
+import {GrRefresh} from "react-icons/gr";
 
 export default function Omnibox() {
     const sharedCTX = useContext(SharedCTX);
@@ -76,12 +79,25 @@ export default function Omnibox() {
                     <Spinner/>
                 </Then>
                 <Else>
-                    <Button className="cursor-default" gradientDuoTone="purpleToBlue" outline title="Go"
+                    <Button className="cursor-default h-10" gradientDuoTone="purpleToBlue" outline title="Go"
                             disabled={!sharedCTX.connected} onClick={handleOmniboxSubmit}>
                         <AiOutlineArrowRight />
                     </Button>
                 </Else>
             </If>
+            <div className="ml-5">
+                <Dropdown inline label="🔨">
+                    <Dropdown.Item onClick={() => {
+                        const webview = $('#webview');
+                        webview.attr('srcdoc', webview.attr('srcdoc'));
+                    }}>
+                        <GrRefresh className="ml-1" size={18} /><span className="ml-2">Refresh</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                        <BsDot color={sharedCTX.connected ? 'green' : 'red'} size={30} /> {sharedCTX.connected ? "Connected" : "Disconnected"}
+                    </Dropdown.Item>
+                </Dropdown>
+            </div>
         </div>
     );
 }
