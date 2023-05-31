@@ -18,3 +18,5 @@ await esbuild.build({
         'process.env': '{}'
     }
 });
+
+console.log('✅ FreedomRuntime Rebuilt');
