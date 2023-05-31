@@ -6,6 +6,7 @@ import {createRoot} from "react-dom/client";
 import App from "./components/Root";
 import CookiePopupBlockerResponder from "./extensionResponders/cookiePopupBlocker";
 import Helper from "./helper";
+import to from "await-to-js";
 
 declare global {
     interface Window {
@@ -17,10 +18,11 @@ const serverUrl = 'http://localhost:8080';
 $(async () => {
     const extensionResponders = [new CookiePopupBlockerResponder()];
 
-    let bareClient: BareClient
-    try {
-        bareClient = await createBareClient(`${serverUrl}/bare/`);
-
+    let err, bareClient: BareClient
+    [err, bareClient] = await to(createBareClient(`${serverUrl}/bare/`));
+    if (err)
+        console.error("❌ Failed to connect to initialise Bare Client", err);
+    else {
         // @ts-ignore
         window.fetch = (input, init) => {
             try {
@@ -30,9 +32,6 @@ $(async () => {
                 throw err;
             }
         }
-    } catch (err) {
-        console.error("❌ Failed to connect to server", err);
-        return;
     }
 
     window.addEventListener('message', async event => {
