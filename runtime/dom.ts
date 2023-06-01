@@ -1,47 +1,27 @@
 import $ from 'cash-dom';
 import * as _ from 'lodash-es';
 import * as async from 'modern-async';
-import Extension from "./extensions";
 import Utils from "../shared/utils";
 import validDataUrl = require('valid-data-url');
+import Extension from "./extensions";
 
 export default class DOM {
 
     static runDomClock() {
         const observer = new MutationObserver(async mutations => {
-            await async.forEach(mutations, async mutation => {
-                const addedNodes = _.castArray(mutation.addedNodes);
-                if (_.isEmpty(addedNodes))
-                    return;
+            const addedNodes = _.castArray(await async.map(mutations, mutation => mutation.target));
+            if (_.isEmpty(addedNodes))
+                return;
 
-                await async.forEach(addedNodes, async addedNode => {
-                    const $elm = $(_.first(addedNode));
-                    await async.forEach((window['extensions'] as Extension[]) ?? [], extension => {
-                        if (_.isFunction(extension.onDomNodeAdded))
-                            extension.onDomNodeAdded($elm);
-                    });
-
-                    const tagName = _.toLower($elm.prop('tagName'));
-                    const src = $elm.attr('src');
-                    const style = $elm.attr('style');
-                    if (!src && !style)
-                        return;
-
-                    // Copy attributes to new element
-                    const $newElm = $(`<${tagName}></${tagName}>`);
-                    const attributes: NamedNodeMap = $elm.prop('attributes');
-                    let needReplacing = false;
-                    $newElm.attr(_.fromPairs(_.map(attributes, attr => [attr.name, attr.value])));
-
-                    if (src && !src.startsWith(window['serverUrl']) && !validDataUrl(src)) {
-                        // Rewrite src
-                        $newElm.attr('src', Utils.rewriteUrl(src));
-                        needReplacing = true;
-                    }
-
-                    if (needReplacing)
-                        $elm.replaceWith($newElm);
+            await async.forEach(addedNodes, async addedNode => {
+                await async.forEach((window['extensions'] as Extension[]) ?? [], extension => {
+                    if (_.isFunction(extension.onDomNodeAdded))
+                        extension.onDomNodeAdded($(addedNode));
                 });
+
+                _.defer(async addedNode => {
+                    await DOM.rewriteAttributes(addedNode);
+                }, <Element>addedNode);
             });
         });
 
@@ -54,7 +34,7 @@ export default class DOM {
 
         // Need separate observer for style attribute for some reason
         const styleObserver = new MutationObserver(async mutations => {
-            const addedNodes = _.castArray(_.map(mutations, mutation => mutation.target));
+            const addedNodes = _.castArray(await async.map(mutations, mutation => mutation.target));
             if (_.isEmpty(addedNodes))
                 return;
 
@@ -83,14 +63,14 @@ export default class DOM {
     static interceptDomActions() {
         Element.prototype.appendChild = new Proxy(Element.prototype.appendChild, {
             apply: function (target, thisArg, argumentsList) {
-                DOM.rewriteAttributes(_.first(argumentsList));
+                DOM.rewriteAttributesSync(_.first(argumentsList));
                 return target.apply(thisArg, argumentsList);
             }
         });
 
         Element.prototype.insertBefore = new Proxy(Element.prototype.insertBefore, {
             apply: function (target, thisArg, argumentsList) {
-                DOM.rewriteAttributes(_.first(argumentsList));
+                DOM.rewriteAttributesSync(_.first(argumentsList));
                 return target.apply(thisArg, argumentsList);
             }
         });
@@ -162,9 +142,17 @@ export default class DOM {
         return value;
     }
 
-    static rewriteAttributes(element: Element) {
+    static async rewriteAttributes(element: Element) {
         if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
-            element.getAttributeNames().forEach(attribute => {
+            await async.forEach(element.getAttributeNames(), attribute => {
+                element.setAttribute(attribute, element.getAttribute(attribute));
+            });
+        }
+    }
+
+    static rewriteAttributesSync(element: Element) {
+        if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
+            _.forEach(element.getAttributeNames(), attribute => {
                 element.setAttribute(attribute, element.getAttribute(attribute));
             });
         }
