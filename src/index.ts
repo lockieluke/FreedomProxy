@@ -86,8 +86,6 @@ app.register(async fastify => {
                     htmlAbsolutifyUrls(_.toString(url), $);
                     cssAbsolutifyUrls(_.toString(url), $);
 
-                    $(`<base href="${Network.currentAddress}/mask" target="_blank" >`).appendTo('head');
-
                     const bareClientJS = await fs.readFile(resolve('@tomphttp/bare-client', import.meta.url).replace(/(^\w+:|^)\/\//, '').replace('.js', '.cjs'), 'utf-8');
                     const runtimeJS = await fs.readFile(path.join(__dirname, '..', 'dist', 'runtime.js'), 'utf-8');
                     const script = `
