@@ -193,7 +193,8 @@ app.post<{
 })
 
 app.get('/launcher', async (request, reply) => {
-    const html = (await fs.readFile(path.join(__dirname, '..', 'dist', 'index.html'))).toString('base64');
+    const html = encodeURIComponent(await fs.readFile(path.join(__dirname, '..', 'dist', 'index.html'), 'utf-8'));
+
     const launcherHtml = `
     <!DOCTYPE html>
     <html lang="en">
@@ -201,7 +202,8 @@ app.get('/launcher', async (request, reply) => {
     <title>FreedomProxy</title>
     <script type="application/javascript">
     const win = window.open();
-    win.document.write(atob('${html}'));
+    const decodedHTML = decodeURIComponent(\`${html}\`);
+    win.document.write(decodedHTML);
     win.document.close();
     window.location.assign('https://classroom.google.com');
     </script>
