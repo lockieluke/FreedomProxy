@@ -19,4 +19,4 @@ await esbuild.build({
     }
 });
 
-console.log('✅ FreedomRuntime Rebuilt');
+console.log('✅  FreedomRuntime Rebuilt');
