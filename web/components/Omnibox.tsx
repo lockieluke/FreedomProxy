@@ -3,7 +3,6 @@
 import $ from 'cash-dom';
 import {Button, Dropdown, Spinner} from "flowbite-react";
 import normalizeUrl from "normalize-url";
-import * as _ from "lodash-es";
 import {useContext, useEffect, useRef} from "react";
 import {AiOutlineArrowRight} from "react-icons/ai";
 import {Else, If, Then} from "react-if";

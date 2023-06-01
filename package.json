@@ -7,10 +7,10 @@
     "build:server": "tsx build.ts",
     "build:web": "vite build",
     "build:runtime": "tsx build-runtime.ts",
-    "watch:server": "chokidar --initial --silent \"src/**/*.ts\" -c \"tsx build.ts\"",
+    "watch:server": "chokidar --initial --silent \"src/**/*.ts\" \"shared/**/*.ts\" -c \"tsx build.ts\"",
     "dev:server": "tsx watch src/index.ts",
     "dev:web": "vite build --watch",
-    "dev:runtime": "chokidar --initial --silent \"runtime/**/*.ts\" -c \"tsx build-runtime.ts\"",
+    "dev:runtime": "chokidar --initial --silent \"runtime/**/*.ts\" \"shared/**/*.ts\" -c \"tsx build-runtime.ts\"",
     "dev": "concurrently --kill-others \"npm:dev:server\" \"npm:dev:web\" \"npm:dev:runtime\"",
     "clean": "rimraf dist/"
   },

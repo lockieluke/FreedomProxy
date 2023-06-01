@@ -19,9 +19,13 @@ export default class DOM {
                         extension.onDomNodeAdded($(addedNode));
                 });
 
-                _.defer(async addedNode => {
+                _.defer(async (addedNode: Element) => {
+                    const $elm = $(addedNode);
+                    if ($elm.attr('target'))
+                        $elm.removeAttr('target');
+
                     await DOM.rewriteAttributes(addedNode);
-                }, <Element>addedNode);
+                }, addedNode);
             });
         });
 
@@ -29,7 +33,7 @@ export default class DOM {
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ['src', 'href']
+            attributeFilter: ['src', 'href', 'target']
         });
 
         // Need separate observer for style attribute for some reason
