@@ -19,7 +19,6 @@ export function htmlAbsolutifyUrls(baseUrl: string, $: CheerioAPI) {
 
     $(selector).each((i, el) => {
         const $el = $(el);
-        const tagName = _.toLower($el.prop('tagName'));
         const href = $el.attr('href');
         const src = $el.attr('src');
         const srcset = $el.attr('srcset');
@@ -35,11 +34,6 @@ export function htmlAbsolutifyUrls(baseUrl: string, $: CheerioAPI) {
             }
 
             if (isRelativeUrl(url) && url !== '#') {
-                if (tagName === 'a' && attr === 'href') {
-                    $el.attr(attr, 'javascript:void(0);');
-                    return;
-                }
-
                 const absoluteUrl = Utils.rewriteUrl(url, baseUrl);
                 $el.attr(attr, absoluteUrl);
             }
