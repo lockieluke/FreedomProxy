@@ -78,6 +78,7 @@
     "react-icons": "^4.9.0",
     "react-if": "^4.1.4",
     "store2": "^2.14.2",
+    "tidy-url": "^1.6.15",
     "universal-user-agent": "^7.0.1",
     "util": "^0.12.5",
     "valid-data-url": "^4.0.1"

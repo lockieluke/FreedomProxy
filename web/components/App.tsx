@@ -6,10 +6,11 @@ import {SharedCTX} from "../ctx";
 import Helper from "../helper";
 import Omnibox from "./Omnibox";
 import WebView from "./WebView";
+import {TidyURL} from "tidy-url";
 
 export default function App() {
     const [connected, setConnected] = useState(false);
-    const [url, setUrl] = useState<string>();
+    const [url, _setUrl] = useState<string>();
     const [isLoading, setIsLoading] = useState(false);
 
     useLayoutEffect(() => {
@@ -33,7 +34,9 @@ export default function App() {
     return (<SharedCTX.Provider value={{
         connected,
         url,
-        setUrl,
+        setUrl: url => {
+            _setUrl(TidyURL.clean(url).url);
+        },
         isLoading,
         setIsLoading
     }}>

@@ -2099,6 +2099,7 @@ __metadata:
     rimraf: ^5.0.1
     store2: ^2.14.2
     tailwindcss: ^3.3.2
+    tidy-url: ^1.6.15
     tsx: ^3.12.7
     typescript: ^5.0.4
     uglify-js: ^3.17.4
@@ -4273,6 +4274,13 @@ __metadata:
   dependencies:
     real-require: ^0.2.0
   checksum: e9ea58f9f36320165b41c2aae5c439bf68bd3575eb533c458483d8b290e31d519979e351408c7d6e248711611434332c2a3aae2165650b028cc3eb9b1052ac16
+  languageName: node
+  linkType: hard
+
+"tidy-url@npm:^1.6.15":
+  version: 1.6.15
+  resolution: "tidy-url@npm:1.6.15"
+  checksum: 3f5b268fb3fafd76663cb29686d61425a7ecf1c531876065e1d6ca3baffefa440be68989fb30ce8cc7130673ee82f06dcbfd108fa55dccdde505fb6cbe8f3268
   languageName: node
   linkType: hard
 

@@ -58,6 +58,12 @@ export default function Omnibox() {
         omniboxRef.current.blur();
     };
 
+    useEffect(() => {
+        if (sharedCTX.url === omniboxRef.current.value || !sharedCTX.url) return;
+
+        omniboxRef.current.value = sharedCTX.url;
+    }, [sharedCTX.url]);
+
     return (
         <div className="flex flex-row justify-center items-center px-5 py-2 border-b-2 border-b-gray-300">
             <h1 className="select-none cursor-default font-bold mr-2">FreedomProxy <span>v2</span></h1>
