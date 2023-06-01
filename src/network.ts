@@ -3,6 +3,7 @@ import {FastifyRequest} from "fastify";
 import fetchCookie from "fetch-cookie";
 import * as _ from 'lodash-es';
 import Config from "./config";
+import Utils from "../shared/utils";
 
 export default class Network {
 
@@ -29,16 +30,16 @@ export default class Network {
     }
 
     static async fetchHTML(url: URL, req: FastifyRequest): Promise<string> {
-        const response = await Network.fetchWithCookie(_.toString(url), {
+        const [err, response] = await Utils.toESM(Network.fetchWithCookie(_.toString(url), {
             headers: {
                 ...Network.defaultHeaders(req)
             },
             redirect: 'follow',
             referrerPolicy: 'strict-origin-when-cross-origin',
             maxRedirect: 10
-        });
-        if (!response.ok)
-            throw new Error(`❌ Failed to fetch HTML from ${url}: ${response.statusText}`);
+        }));
+        if (err || !response.ok)
+            throw new Error(`❌ Failed to fetch HTML from ${url}: ${response?.statusText}`);
 
         return await response.text();
     }

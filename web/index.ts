@@ -1,18 +1,11 @@
 import BareClient, {BareFetchInit, createBareClient} from "@tomphttp/bare-client";
 import $ from 'cash-dom';
-import * as _ from 'lodash-es';
 import * as async from 'modern-async';
 import {createRoot} from "react-dom/client";
 import App from "./components/Root";
 import CookiePopupBlockerResponder from "./extensionResponders/cookiePopupBlocker";
-import Helper from "./helper";
 import to from "await-to-js";
-
-declare global {
-    interface Window {
-        helper: Helper;
-    }
-}
+import {listenForWebViewMessages} from "./communication";
 
 const serverUrl = 'http://localhost:8080';
 $(async () => {
@@ -34,24 +27,16 @@ $(async () => {
         }
     }
 
-    window.addEventListener('message', async event => {
-        const data = _.attempt(eventData => JSON.parse(eventData), JSON.stringify(event.data));
-        if (_.isError(data)) {
-            console.error("❌ Failed to parse iframe message data", data);
-            return;
-        }
-
-        const type: string = data.type;
-        if (!type)
-            return;
+    listenForWebViewMessages(async message => {
         const iframe = <HTMLIFrameElement>document.getElementById('webview');
+        const type = message.type;
 
         const sendResponse = (response: any) => iframe.contentWindow.postMessage(JSON.stringify(response), '*');
         await async.forEach(extensionResponders, extensionResponder => {
             if (type.startsWith(extensionResponder.messagePrefix))
-                extensionResponder.onMessage(data, sendResponse);
+                extensionResponder.onMessage(message, sendResponse);
         });
-    })
+    });
 
     const root = createRoot($('#app').get(0));
     root.render(App());

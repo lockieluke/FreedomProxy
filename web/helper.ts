@@ -29,14 +29,15 @@ export default class Helper {
         return new Promise<any>((resolve, reject) => {
             const receiveCB = event => {
                 const data = JSON.parse(Msgpack.decodeFromString(event.data));
-                if (data.route === `${route}-response`) {
-                    this.ws.removeEventListener('message', receiveCB);
-                    resolve(data);
-                }
 
                 if (data.ogRoute === route && data.error) {
                     this.ws.removeEventListener('message', receiveCB);
                     reject(data.error);
+                }
+
+                if (data.route === `${route}-response`) {
+                    this.ws.removeEventListener('message', receiveCB);
+                    resolve(data);
                 }
             }
             this.ws.addEventListener('message', receiveCB);

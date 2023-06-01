@@ -14,6 +14,7 @@ import {SharedCTX} from "../ctx";
 import isUrl from 'is-url';
 import {BsDot} from "react-icons/bs";
 import {GrRefresh} from "react-icons/gr";
+import {listenForWebViewMessages} from "../communication";
 
 export default function Omnibox() {
     const sharedCTX = useContext(SharedCTX);
@@ -31,12 +32,8 @@ export default function Omnibox() {
             }
         });
 
-        window.addEventListener('message', event => {
-            const data = _.attempt(eventData => JSON.parse(eventData), JSON.stringify(event.data));
-            if (_.isError(data))
-                return;
-
-            if (data['type'] === 'omnibox.focus')
+        listenForWebViewMessages(message => {
+            if (message['type'] === 'omnibox.focus')
                 omniboxRef.current.focus();
         });
 

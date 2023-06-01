@@ -17,6 +17,7 @@ import url from "url";
 import Msgpack from "../shared/msgpack";
 import Network from "./network";
 import {cssAbsolutifyUrls, htmlAbsolutifyUrls} from "./preprocessing";
+import Utils from "../shared/utils";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -81,7 +82,9 @@ app.register(async fastify => {
 
                 case 'get-html':
                     const url = new URL(payload.url)
-                    const html = await Network.fetchHTML(url, req);
+                    const [err, html] = await Utils.toESM(Network.fetchHTML(url, req));
+                    if (err)
+                        return send({error: err.message}, true);
                     const $ = cheerio.load(html);
                     htmlAbsolutifyUrls(_.toString(url), $);
                     cssAbsolutifyUrls(_.toString(url), $);

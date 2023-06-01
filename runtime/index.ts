@@ -4,15 +4,15 @@ import Debug from "./debug";
 import DOM from "./dom";
 import CookiePopupBlocker from "./extensions/cookiePopupBlocker";
 import Fetching from "./fetching";
-import History from "./history";
-import Navigator from "./navigator";
+import Navigation from "./navigation";
 
 Debug.log('✅ FreedomRuntime Loaded');
 performance.mark('start');
 
 Fetching.fixFetching();
-Navigator.interceptNavigatorActions();
-History.interceptHistoryActions();
+Navigation.interceptNavigatorActions();
+Navigation.interceptNavigationEvents();
+Navigation.interceptHistoryActions();
 
 DOM.passDomEventsToUI();
 DOM.interceptDomActions();

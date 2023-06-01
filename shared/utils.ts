@@ -5,10 +5,13 @@ import isRelativeUrl from "is-relative-url";
 import * as _ from 'lodash-es';
 import validDataUrl from 'valid-data-url';
 import Network from "../src/network";
+import toDefault from "await-to-js";
 
 declare const serverUrl: string, targetUrl: string;
 
 export default class Utils {
+
+    static toESM: typeof toDefault = isBrowser ? null as any : _.get(toDefault, 'default') as unknown as typeof toDefault;
 
     static controlKey(event: KeyboardEvent) {
         return navigator.userAgentData?.platform === 'macOS' ? event.metaKey : event.ctrlKey;
@@ -18,6 +21,13 @@ export default class Utils {
         if (Utils.isUrlRewritten(url))
             return url;
         return `${isBrowser ? serverUrl : Network.currentAddress}/mask?url=${btoa(encodeURIComponent(isRelativeUrl(url) ? _.toString(new URL(url, origin)) : url))}&origin=${btoa(encodeURIComponent(origin))}`;
+    }
+
+    static undoRewriteUrl(url: string) {
+        if (!Utils.isUrlRewritten(url))
+            return url;
+        const params = new URLSearchParams(url.split('?')[1]);
+        return decodeURIComponent(atob(params.get('url') ?? ''));
     }
 
     static isUrlRewritten(url: string) {
