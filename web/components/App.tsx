@@ -1,5 +1,5 @@
 import to from "await-to-js";
-import {useLayoutEffect, useState} from "react";
+import {useEffect, useLayoutEffect, useState} from "react";
 import * as _ from "lodash-es";
 import Analytics from "../analytics";
 import {SharedCTX} from "../ctx";
@@ -7,6 +7,8 @@ import Helper from "../helper";
 import Omnibox from "./Omnibox";
 import WebView from "./WebView";
 import {TidyURL} from "tidy-url";
+import {Slide, toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App() {
     const [connected, setConnected] = useState(false);
@@ -32,6 +34,20 @@ export default function App() {
         })();
     }, []);
 
+    useEffect(() => {
+        _.defer(() => {
+            toast("FreedomProxy is only for educational purposes.", {
+                hideProgressBar: true,
+                draggable: false,
+                closeOnClick: false,
+                closeButton: false,
+                position: 'bottom-right',
+                transition: Slide,
+                icon: '🔒'
+            });
+        });
+    }, []);
+
     return (<SharedCTX.Provider value={{
         connected,
         url,
@@ -50,5 +66,6 @@ export default function App() {
     }}>
         <Omnibox/>
         <WebView/>
+        <ToastContainer />
     </SharedCTX.Provider>);
 }
