@@ -14,6 +14,7 @@ import isUrl from 'is-url';
 import {BsArrowLeft, BsDot} from "react-icons/bs";
 import {GrRefresh} from "react-icons/gr";
 import {listenForWebViewMessages} from "../communication";
+import Product from "../../shared/product";
 
 export default function Omnibox() {
     const sharedCTX = useContext(SharedCTX);
@@ -66,7 +67,7 @@ export default function Omnibox() {
 
     return (
         <div className="flex flex-row justify-center items-center px-5 py-2 border-b-2 border-b-gray-300">
-            <h1 className="select-none cursor-default font-bold mr-2">FreedomProxy <span>v2</span></h1>
+            <h1 className="select-none cursor-default font-bold mr-2">{Product.productName === "FreedomProxy" ? "FreedomProxy v2" : Product.productName}</h1>
             <input ref={omniboxRef} type="text" placeholder="Search or Enter URL..."
                    className="flex-grow flex-1 rounded-lg rounded-l mr-2" onChange={event => {
                 store.set("omnibox.lastInput", event.currentTarget.value);

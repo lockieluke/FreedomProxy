@@ -42,6 +42,7 @@ export default defineConfig({
             '@assets': '/assets'
         },
     },
+    envDir: '../',
     plugins: [tsconfigPaths({
         projects: ['tsconfig.web.json']
     }), react(), viteSingleFile(), ViteMinifyPlugin()]

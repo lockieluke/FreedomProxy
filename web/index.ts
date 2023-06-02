@@ -6,6 +6,9 @@ import App from "./components/Root";
 import CookiePopupBlockerResponder from "./extensionResponders/cookiePopupBlocker";
 import to from "await-to-js";
 import {listenForWebViewMessages} from "./communication";
+import Product from "../shared/product";
+
+document.title = Product.productName;
 
 const serverUrl = 'http://localhost:8080';
 $(async () => {
