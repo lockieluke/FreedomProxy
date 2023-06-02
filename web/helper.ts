@@ -27,6 +27,7 @@ export default class Helper {
 
     send(route: string, payload: any = {}) {
         return new Promise<any>((resolve, reject) => {
+            const requestUUID = window.crypto.randomUUID();
             const receiveCB = event => {
                 const data = JSON.parse(Msgpack.decodeFromString(event.data));
 
@@ -35,7 +36,7 @@ export default class Helper {
                     reject(data.error);
                 }
 
-                if (data.route === `${route}-response`) {
+                if (data.route === `${route}-response` && data.requestUUID === requestUUID) {
                     this.ws.removeEventListener('message', receiveCB);
                     resolve(data);
                 }
@@ -44,6 +45,7 @@ export default class Helper {
 
             this.ws.send(Msgpack.encodeToString(JSON.stringify({
                 route,
+                requestUUID,
                 ...payload
             })));
         })

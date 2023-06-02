@@ -72,10 +72,11 @@ app.register(async fastify => {
         conn.socket.on('message', async rawMessage => {
             const payload = JSON.parse(Msgpack.decodeFromString(_.toString(rawMessage)));
             const route = payload.route;
-            const send = (payload: any, error: boolean = false) => {
-                conn.socket.send(Msgpack.encodeToString(JSON.stringify(error ? {...payload, 'ogRoute': route} : {
-                    ...payload,
-                    'route': `${route}-response`
+            const send = (sendPayload: any, error: boolean = false) => {
+                conn.socket.send(Msgpack.encodeToString(JSON.stringify(error ? {...sendPayload, 'ogRoute': route} : {
+                    ...sendPayload,
+                    'route': `${route}-response`,
+                    'requestUUID': payload.requestUUID
                 })));
             }
 
