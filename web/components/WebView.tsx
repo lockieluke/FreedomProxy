@@ -34,6 +34,7 @@ export default function WebView() {
                 return;
             }
 
+            sharedCTX.addUrl(url);
             iframeRef.current.srcdoc = data.html;
             console.log(`🌐 Successfully loaded URL: ${url}`);
             sharedCTX.setIsLoading(false);

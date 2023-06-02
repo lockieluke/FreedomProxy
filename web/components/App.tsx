@@ -11,6 +11,7 @@ import {TidyURL} from "tidy-url";
 export default function App() {
     const [connected, setConnected] = useState(false);
     const [url, _setUrl] = useState<string>();
+    const [urls, setUrls] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useLayoutEffect(() => {
@@ -36,6 +37,13 @@ export default function App() {
         url,
         setUrl: url => {
             _setUrl(TidyURL.clean(url).url);
+        },
+        urls,
+        addUrl: url => {
+            setUrls(prevUrls => [...prevUrls, url]);
+        },
+        removeTopUrl: () => {
+            setUrls(prevUrls => prevUrls.slice(0, prevUrls.length - 1));
         },
         isLoading,
         setIsLoading

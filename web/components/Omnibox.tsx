@@ -11,7 +11,7 @@ import {SharedCTX} from "../ctx";
 
 // @ts-ignore
 import isUrl from 'is-url';
-import {BsDot} from "react-icons/bs";
+import {BsArrowLeft, BsDot} from "react-icons/bs";
 import {GrRefresh} from "react-icons/gr";
 import {listenForWebViewMessages} from "../communication";
 
@@ -94,6 +94,14 @@ export default function Omnibox() {
                         webview.attr('srcdoc', webview.attr('srcdoc'));
                     }}>
                         <GrRefresh className="ml-1" size={18} /><span className="ml-2">Refresh</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => {
+                        if (sharedCTX.urls[sharedCTX.urls.length - 2]) {
+                            sharedCTX.setUrl(sharedCTX.urls[sharedCTX.urls.length - 2]);
+                            sharedCTX.removeTopUrl();
+                        }
+                    }}>
+                        <BsArrowLeft className="ml-1" size={20} /><span className="ml-2">Back</span>
                     </Dropdown.Item>
                     <Dropdown.Item>
                         <BsDot color={sharedCTX.connected ? 'green' : 'red'} size={30} /> {sharedCTX.connected ? "Connected" : "Disconnected"}
