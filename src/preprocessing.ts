@@ -8,6 +8,7 @@ export function htmlAbsolutifyUrls(baseUrl: string, $: CheerioAPI) {
         'a[href]',
         'img[src]',
         'img[srcset]',
+        'source[srcset]',
         'script[src]',
         'link[href]',
         'source[src]',
