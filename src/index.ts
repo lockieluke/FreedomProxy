@@ -3,6 +3,7 @@ import fastifyWebsocket from "@fastify/websocket";
 import createBareServer from '@tomphttp/bare-server-node';
 import arrayBufferToBuffer from 'arraybuffer-to-buffer';
 import blocked from 'blocked-at';
+import * as async from 'modern-async';
 import * as cheerio from 'cheerio';
 import dotenv from 'dotenv';
 import fastify from "fastify";
@@ -172,7 +173,9 @@ app.all<{
     // Remove content-encoding header to prevent double compression, and copy all other headers
     const responseHeaders = response.headers;
     responseHeaders.delete('content-encoding');
-    responseHeaders.forEach((value, key) => res.header(_.toLower(key), value))
+    await async.forEach(responseHeaders, ([key, value]) => {
+        res.header(key, value);
+    });
 
     res.header('access-control-allow-origin', 'null');
     res.header('origin', origin);
