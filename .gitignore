@@ -17,3 +17,7 @@ dist/
 
 # IDE Specific
 .idea/
+
+# Config files
+.env
+.env*
