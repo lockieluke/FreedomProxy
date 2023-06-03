@@ -87,8 +87,5 @@
     "universal-user-agent": "^7.0.1",
     "util": "^0.12.5",
     "valid-data-url": "^4.0.1"
-  },
-  "alias": {
-    "@sindresorhus/is": false
   }
 }
