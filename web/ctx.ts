@@ -11,7 +11,7 @@ export const SharedCTX = createContext<{
     setIsLoading: (isLoading: boolean) => void
 }>({
     connected: false,
-    url: "",
+    url: undefined,
     setUrl: () => {},
     urls: [],
     addUrl: () => {},

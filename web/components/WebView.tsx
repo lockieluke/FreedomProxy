@@ -1,13 +1,20 @@
 /// <reference path="../types.d.ts" />
 
-import {useContext, useEffect, useRef} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {SharedCTX} from "../ctx";
 import {listenForWebViewMessages} from "../communication";
 import to from "await-to-js";
+import {Else, If, Then} from "react-if";
+import Product from "../../shared/product";
+
+// @ts-ignore
+import Icon from '@assets/wave.png';
+import LearnMore from "./LearnMore";
 
 export default function WebView() {
     const sharedCTX = useContext(SharedCTX);
     const iframeRef = useRef<HTMLIFrameElement>();
+    const [showLearnMore, setShowLearnMore] = useState(false);
 
     useEffect(() => {
         listenForWebViewMessages(message => {
@@ -41,7 +48,26 @@ export default function WebView() {
         })();
     }, [sharedCTX.url]);
 
-    return (<iframe ref={iframeRef} id="webview"
+    return (<If condition={sharedCTX.url}>
+        <Then>
+            <iframe ref={iframeRef} id="webview"
                     sandbox="allow-downloads allow-forms allow-modals allow-popups allow-scripts allow-same-origin"
-                    className="w-screen flex-1"></iframe>);
+                    className="w-screen flex-1"></iframe>
+        </Then>
+        <Else>
+            <div className="flex-1 flex flex-col justify-center items-center select-none">
+                <If condition={showLearnMore}>
+                    <Then>
+                        <LearnMore onBack={() => setShowLearnMore(false)} />
+                    </Then>
+                    <Else>
+                        <img src={Icon} alt="FreedomProxy icon" draggable={false} className="w-32 h-32 my-5" />
+                        <div className="text-2xl font-bold">Welcome to {Product.productName}</div>
+                        <div className="text-xl">Enter a URL or search Google to continue</div>
+                        <a href="javascript:void(0)" onClick={() => setShowLearnMore(true)} draggable={false} className="my-2 text-blue-600 hover:underline">Learn more</a>
+                    </Else>
+                </If>
+            </div>
+        </Else>
+    </If>);
 }
