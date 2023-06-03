@@ -1,5 +1,15 @@
 import {isBrowser} from "browser-or-node";
 
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+    readonly VITE_APP_MOCK_NAME: string
+}
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv
+}
+
 export default class Product {
 
     // Change productName to something else for spoofing
