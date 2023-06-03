@@ -53,4 +53,8 @@ export default class Utils {
         });
     }
 
+    static isEmptyOrSpaces(str: string){
+        return str === null || str.match(/^ *$/) !== null;
+    }
+
 }

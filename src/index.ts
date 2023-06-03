@@ -83,17 +83,18 @@ app.register(async fastify => {
             switch (route) {
 
                 case 'get-html':
-                    const url = new URL(payload.url)
-                    const [err, html] = await Utils.toESM(Network.fetchHTML(url, req));
-                    if (err)
-                        return send({error: err.message}, true);
-                    const $ = cheerio.load(html);
-                    htmlAbsolutifyUrls(_.toString(url), $);
-                    cssAbsolutifyUrls(_.toString(url), $);
+                    await (async () => {
+                        const url = new URL(payload.url)
+                        const [err, html] = await Utils.toESM(Network.fetchHTML(url, req));
+                        if (err)
+                            return send({error: err.message}, true);
+                        const $ = cheerio.load(html);
+                        htmlAbsolutifyUrls(_.toString(url), $);
+                        cssAbsolutifyUrls(_.toString(url), $);
 
-                    const bareClientJS = await fs.readFile(resolve('@tomphttp/bare-client', import.meta.url).replace(/(^\w+:|^)\/\//, '').replace('.js', '.cjs'), 'utf-8');
-                    const runtimeJS = await fs.readFile(path.join(__dirname, '..', 'dist', 'runtime.js'), 'utf-8');
-                    const script = `
+                        const bareClientJS = await fs.readFile(resolve('@tomphttp/bare-client', import.meta.url).replace(/(^\w+:|^)\/\//, '').replace('.js', '.cjs'), 'utf-8');
+                        const runtimeJS = await fs.readFile(path.join(__dirname, '..', 'dist', 'runtime.js'), 'utf-8');
+                        const script = `
                     <script type="application/javascript">
                     window.targetUrl = '${_.toString(url)}';
                     window.serverUrl = '${Network.currentAddress}';
@@ -114,29 +115,47 @@ app.register(async fastify => {
                     })();
                     </script>
                     `;
-                    $('head').append(script);
+                        $('head').append(script);
 
-                    send({
-                        html: $.html({
-                            baseURI: _.toString(url)
-                        })
-                    });
+                        send({
+                            html: $.html({
+                                baseURI: _.toString(url)
+                            })
+                        });
+                    })();
                     break;
 
                 case 'cookie-popup-blocker-get-block-list':
-                    const response = await fetch('https://www.i-dont-care-about-cookies.eu/abp/');
-                    const text = await response.text();
+                    await (async () => {
+                        const response = await fetch('https://www.i-dont-care-about-cookies.eu/abp/');
+                        const text = await response.text();
 
-                    send({
-                        blockList: text
-                    });
+                        send({
+                            blockList: text
+                        });
+                    })();
                     break;
+
+                case 'fetch-search-suggestions':
+                    await (async () => {
+                        const [err, response] = await Utils.toESM(fetch(`https://www.google.com/complete/search?client=chrome&q=${encodeURIComponent(payload.keyword)}`));
+                        if (err)
+                            return send({error: err.message}, true);
+
+                        const json: any = await response.json();
+                        send({
+                            suggestions: [_.first(json), ...json[1]]
+                        });
+                    })();
+                    break;
+
 
                 default:
                     send({
                         error: `Unsupported route: ${route}`,
                         errorType: 'unsupported-route'
                     }, true);
+                    break;
             }
         });
     });
