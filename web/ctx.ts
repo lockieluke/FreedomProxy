@@ -7,6 +7,8 @@ export const SharedCTX = createContext<{
     urls: string[],
     addUrl: (url: string) => void,
     removeTopUrl: () => void,
+    showAboutDialog: boolean,
+    setShowAboutDialog: (showAboutDialog: boolean) => void,
     isLoading: boolean,
     setIsLoading: (isLoading: boolean) => void
 }>({
@@ -16,6 +18,8 @@ export const SharedCTX = createContext<{
     urls: [],
     addUrl: () => {},
     removeTopUrl: () => {},
+    showAboutDialog: false,
+    setShowAboutDialog: () => {},
     isLoading: false,
     setIsLoading: () => {}
 });

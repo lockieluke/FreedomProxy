@@ -1,4 +1,4 @@
-import esbuild from 'esbuild';
+import * as esbuild from 'esbuild';
 import * as path from "path";
 import * as url from "url";
 

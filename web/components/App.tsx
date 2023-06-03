@@ -9,12 +9,15 @@ import WebView from "./WebView";
 import {TidyURL} from "tidy-url";
 import {Slide, toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {Modal} from "flowbite-react";
+import Product from "../../shared/product";
 
 export default function App() {
     const [connected, setConnected] = useState(false);
     const [url, _setUrl] = useState<string>();
     const [urls, setUrls] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [showAboutDialog, setShowAboutDialog] = useState(false);
 
     useLayoutEffect(() => {
         (async () => {
@@ -61,9 +64,18 @@ export default function App() {
         removeTopUrl: () => {
             setUrls(prevUrls => prevUrls.slice(0, prevUrls.length - 1));
         },
+        showAboutDialog,
+        setShowAboutDialog,
         isLoading,
         setIsLoading
     }}>
+        <Modal dismissible show={showAboutDialog} onClose={() => setShowAboutDialog(false)}>
+            <Modal.Header>About {Product.productName}</Modal.Header>
+            <Modal.Body>
+                <p>Commit Hash: {Product.commitHash}</p>
+                <a className="text-blue-600 hover:underline" href="https://github.com/lockieluke/FreedomProxy">GitHub</a>
+            </Modal.Body>
+        </Modal>
         <Omnibox/>
         <WebView/>
         <ToastContainer />

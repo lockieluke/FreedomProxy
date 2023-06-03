@@ -179,9 +179,13 @@ export default function Omnibox() {
                     }}>
                         <BsArrowLeft className="ml-1" size={20}/><span className="ml-2">Back</span>
                     </Dropdown.Item>
+                    <Dropdown.Divider />
                     <Dropdown.Item>
                         <BsDot color={sharedCTX.connected ? 'green' : 'red'}
                                size={30}/> {sharedCTX.connected ? "Connected" : "Disconnected"}
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => sharedCTX.setShowAboutDialog(true)}>
+                        <span className="ml-1">About {Product.productName}</span>
                     </Dropdown.Item>
                 </Dropdown>
             </div>

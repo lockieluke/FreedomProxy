@@ -1,7 +1,8 @@
-import esbuild from 'esbuild';
+import * as esbuild from 'esbuild';
 import * as path from "path";
 import * as url from "url";
 import {minify} from "uglify-js";
+import * as child_process from "child_process";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +42,9 @@ await esbuild.build({
     format: 'esm',
     banner: {
         js: minify(ESM_REQUIRE_SHIM).code
+    },
+    define: {
+        __COMMIT_HASH__: JSON.stringify(child_process.execSync('git rev-parse HEAD').toString().trim())
     },
     external: ['blocked-at']
 });

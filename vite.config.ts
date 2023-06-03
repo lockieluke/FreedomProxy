@@ -4,6 +4,7 @@ import { viteSingleFile } from "vite-plugin-singlefile";
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import {NodeGlobalsPolyfillPlugin} from "@esbuild-plugins/node-globals-polyfill";
+import * as child_process from "child_process";
 
 export default defineConfig({
     root: 'web/',
@@ -41,6 +42,9 @@ export default defineConfig({
             util: "util",
             '@assets': '/assets'
         },
+    },
+    define: {
+        __COMMIT_HASH__: JSON.stringify(child_process.execSync('git rev-parse HEAD').toString().trim())
     },
     envDir: '../',
     plugins: [tsconfigPaths({
