@@ -1,6 +1,6 @@
 import {useEffect, useLayoutEffect, useRef} from "react";
 import {marked} from "marked";
-import * as _ from "lodash";
+import * as _ from "lodash-es";
 
 /** @ts-ignore @type {import('dompurify/index')} */
 import DOMPurify from 'dompurify';

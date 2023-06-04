@@ -1,0 +1,147 @@
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..b58b603fea78041071d125a30db58d79b3d49217
+--- /dev/null
++++ b/.idea/.gitignore
+@@ -0,0 +1,5 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..d9fb14e4d06a030cba3cd105982c4f196e0718a0
+--- /dev/null
++++ b/.idea/modules.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/user.iml" filepath="$PROJECT_DIR$/.idea/user.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/user.iml b/.idea/user.iml
+new file mode 100644
+index 0000000000000000000000000000000000000000..24643cc37449b4bde54411a80b8ed61258225e34
+--- /dev/null
++++ b/.idea/user.iml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="WEB_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
++      <excludeFolder url="file://$MODULE_DIR$/temp" />
++      <excludeFolder url="file://$MODULE_DIR$/tmp" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..a995564ba7a472c33b2afdc3d4fcffb8356c9584
+--- /dev/null
++++ b/.idea/workspace.xml
+@@ -0,0 +1,41 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ChangeListManager">
++    <list default="true" id="44d380a5-6d8b-433e-b524-af23865a19e9" name="Changes" comment="" />
++    <option name="SHOW_DIALOG" value="false" />
++    <option name="HIGHLIGHT_CONFLICTS" value="true" />
++    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
++    <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="MarkdownSettingsMigration">
++    <option name="stateVersion" value="1" />
++  </component>
++  <component name="ProjectId" id="2QkWpt3p5MOsbnEvlq5wFJoTc7U" />
++  <component name="ProjectViewState">
++    <option name="hideEmptyMiddlePackages" value="true" />
++    <option name="showLibraryContents" value="true" />
++  </component>
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "WebServerToolWindowFactoryState": "false",
++    "nodejs_package_manager_path": "npm",
++    "vue.rearranger.settings.migration": "true"
++  }
++}]]></component>
++  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
++  <component name="TaskManager">
++    <task active="true" id="Default" summary="Default task">
++      <changelist id="44d380a5-6d8b-433e-b524-af23865a19e9" name="Changes" comment="" />
++      <created>1685898245614</created>
++      <option name="number" value="Default" />
++      <option name="presentableId" value="Default" />
++      <updated>1685898245614</updated>
++      <workItem from="1685898247414" duration="23000" />
++    </task>
++    <servers />
++  </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 15176d4b1454087e25cf922ed07969a3202a2538..de378c4593f82fd420ec0a4367d69c21b427200c 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -47,14 +47,14 @@ class Context {
+     const isKeep = conditionals.some((subConditional) => {
+       const isNot = startNot !== subConditional.isNot;
+       const value = this.env[subConditional.key];
+-      if (!Object.hasOwn(this.env, subConditional.key)) {
+-        this.logger.warn(
+-          `No '${subConditional.key}' propertie in Vite environment variables`,
+-          {
+-            timestamp: true
+-          }
+-        );
+-      }
++      // if (!Object.hasOwn(this.env, subConditional.key)) {
++      //   this.logger.warn(
++      //     `No '${subConditional.key}' propertie in Vite environment variables`,
++      //     {
++      //       timestamp: true
++      //     }
++      //   );
++      // }
+       if (subConditional.value === void 0) {
+         return !!value !== isNot;
+       } else {
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 9d76f454c289cf8146608071c86a9b1765f61c31..ab6b83065dab0fd3b88213068e3c8d1a7eda68fc 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -45,14 +45,14 @@ class Context {
+     const isKeep = conditionals.some((subConditional) => {
+       const isNot = startNot !== subConditional.isNot;
+       const value = this.env[subConditional.key];
+-      if (!Object.hasOwn(this.env, subConditional.key)) {
+-        this.logger.warn(
+-          `No '${subConditional.key}' propertie in Vite environment variables`,
+-          {
+-            timestamp: true
+-          }
+-        );
+-      }
++      // if (!Object.hasOwn(this.env, subConditional.key)) {
++      //   this.logger.warn(
++      //     `No '${subConditional.key}' propertie in Vite environment variables`,
++      //     {
++      //       timestamp: true
++      //     }
++      //   );
++      // }
+       if (subConditional.value === void 0) {
+         return !!value !== isNot;
+       } else {

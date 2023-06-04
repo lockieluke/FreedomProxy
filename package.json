@@ -12,7 +12,8 @@
     "dev:web": "vite build --watch",
     "dev:runtime": "chokidar --initial --silent \"runtime/**/*.ts\" \"shared/**/*.ts\" -c \"tsx build-runtime.ts\"",
     "dev": "concurrently --kill-others \"npm:dev:server\" \"npm:dev:web\" \"npm:dev:runtime\"",
-    "clean": "rimraf dist/"
+    "clean": "rimraf dist/",
+    "analyse:deps": "vite-bundle-visualizer"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
@@ -43,6 +44,8 @@
     "uglify-js": "^3.17.4",
     "user-agent-data-types": "^0.3.1",
     "vite": "^4.3.9",
+    "vite-bundle-visualizer": "^0.7.0",
+    "vite-plugin-conditional-compiler": "^0.1.1",
     "vite-plugin-minify": "^1.5.2",
     "vite-plugin-singlefile": "^0.13.5",
     "vite-tsconfig-paths": "^4.2.0"
@@ -89,5 +92,8 @@
     "universal-user-agent": "^7.0.1",
     "util": "^0.12.5",
     "valid-data-url": "^4.0.1"
+  },
+  "resolutions": {
+    "vite-plugin-conditional-compiler@^0.1.1": "patch:vite-plugin-conditional-compiler@npm%3A0.1.1#./.yarn/patches/vite-plugin-conditional-compiler-npm-0.1.1-15b4b7ca59.patch"
   }
 }

@@ -1,7 +1,7 @@
 /// <reference types="user-agent-data-types" />
 
 import $ from 'cash-dom';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import {Button, Dropdown, Spinner} from "flowbite-react";
 import normalizeUrl from "normalize-url";
 import {useContext, useEffect, useRef, useState} from "react";

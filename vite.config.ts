@@ -5,6 +5,7 @@ import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import {NodeGlobalsPolyfillPlugin} from "@esbuild-plugins/node-globals-polyfill";
 import * as child_process from "child_process";
+import ConditionalCompile from "vite-plugin-conditional-compiler";
 
 export default defineConfig({
     root: 'web/',
@@ -49,5 +50,5 @@ export default defineConfig({
     envDir: '../',
     plugins: [tsconfigPaths({
         projects: ['tsconfig.web.json']
-    }), react(), viteSingleFile(), ViteMinifyPlugin()]
+    }), react(), viteSingleFile(), ViteMinifyPlugin(), ConditionalCompile()]
 });

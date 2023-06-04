@@ -1,6 +1,10 @@
 import {isNode} from "browser-or-node";
+
+// #v-ifdef VITE_NEVER_COMPILE
 import {FastifyRequest} from "fastify";
 import fetchCookie from "fetch-cookie";
+// #v-endif
+
 import * as _ from 'lodash-es';
 import Config from "./config";
 import Utils from "../shared/utils";
@@ -8,6 +12,8 @@ import Utils from "../shared/utils";
 export default class Network {
 
     static currentAddress: string;
+
+    // #v-ifdef VITE_NEVER_COMPILE
     static defaultHeaders(req: FastifyRequest): HeadersInit {
         return isNode ? {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -47,5 +53,6 @@ export default class Network {
     static get fetchWithCookie() {
         return fetchCookie(fetch);
     }
+    // #v-endif
 
 }
