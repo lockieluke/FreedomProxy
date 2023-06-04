@@ -149,7 +149,7 @@ export default function Omnibox() {
                         setSuggestionsVisible(false);
                     }, suggestionsVisible ? 100 : 0);
                 }}
-                disabled={sharedCTX.isLoading}
+                disabled={sharedCTX.isLoading ?? !sharedCTX.connected}
                 inputMode='url'
             />
             <If condition={sharedCTX.isLoading}>
@@ -166,19 +166,25 @@ export default function Omnibox() {
             <div className="ml-5">
                 <Dropdown inline label="🔨">
                     <Dropdown.Item onClick={() => {
-                        const webview = $('#webview');
-                        webview.attr('srcdoc', webview.attr('srcdoc'));
+                        if (sharedCTX.connected) {
+                            const webview = $('#webview');
+                            webview.attr('srcdoc', webview.attr('srcdoc'));
+                        } else {
+                            window.location.reload();
+                        }
                     }}>
                         <GrRefresh className="ml-1" size={18}/><span className="ml-2">Refresh</span>
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => {
-                        if (sharedCTX.urls[sharedCTX.urls.length - 2]) {
-                            sharedCTX.setUrl(sharedCTX.urls[sharedCTX.urls.length - 2]);
-                            sharedCTX.removeTopUrl();
-                        }
-                    }}>
-                        <BsArrowLeft className="ml-1" size={20}/><span className="ml-2">Back</span>
-                    </Dropdown.Item>
+                    <If condition={sharedCTX.connected}>
+                        <Dropdown.Item onClick={() => {
+                            if (sharedCTX.urls[sharedCTX.urls.length - 2]) {
+                                sharedCTX.setUrl(sharedCTX.urls[sharedCTX.urls.length - 2]);
+                                sharedCTX.removeTopUrl();
+                            }
+                        }}>
+                            <BsArrowLeft className="ml-1" size={20}/><span className="ml-2">Back</span>
+                        </Dropdown.Item>
+                    </If>
                     <Dropdown.Divider />
                     <Dropdown.Item>
                         <BsDot color={sharedCTX.connected ? 'green' : 'red'}

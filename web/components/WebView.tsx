@@ -10,6 +10,7 @@ import Product from "../../shared/product";
 // @ts-ignore
 import Icon from '@assets/wave.png';
 import LearnMore from "./LearnMore";
+import ChromeDino from "./ChromeDino";
 
 export default function WebView() {
     const sharedCTX = useContext(SharedCTX);
@@ -61,10 +62,19 @@ export default function WebView() {
                         <LearnMore onBack={() => setShowLearnMore(false)} />
                     </Then>
                     <Else>
-                        <img src={Icon} alt="FreedomProxy icon" draggable={false} className="w-32 h-32 my-5" />
-                        <div className="text-2xl font-bold">Welcome to {Product.productName}</div>
-                        <div className="text-xl">Enter a URL or search Google to continue</div>
-                        <a href="javascript:void(0)" onClick={() => setShowLearnMore(true)} draggable={false} className="my-2 text-blue-600 hover:underline">Learn more</a>
+                        <If condition={sharedCTX.connected}>
+                            <Then>
+                                <img src={Icon} alt="FreedomProxy icon" draggable={false} className="w-32 h-32 my-5" />
+                                <div className="text-2xl font-bold">Welcome to {Product.productName}</div>
+                                <div className="text-xl">Enter a URL or search Google to continue</div>
+                                <a href="javascript:void(0)" onClick={() => setShowLearnMore(true)} draggable={false} className="my-2 text-blue-600 hover:underline">Learn more</a>
+                            </Then>
+                            <Else>
+                                <ChromeDino />
+                                <h1 className="text-xl font-bold">Could not connect to helper</h1>
+                                <p className="w-2/4 my-2 text-center">Please try again later and reload without cache</p>
+                            </Else>
+                        </If>
                     </Else>
                 </If>
             </div>
