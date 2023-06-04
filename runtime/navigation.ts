@@ -1,4 +1,4 @@
-/// <reference path="navigationApi.d.ts" />
+/// <reference path="../shared/navigationApi.d.ts" />
 /// <reference path="types.d.ts" />
 
 import * as _ from 'lodash-es';

@@ -57,4 +57,7 @@ export default class Utils {
         return str === null || str.match(/^ *$/) !== null;
     }
 
+    static isChromium = isBrowser ? !!navigator.userAgentData && navigator.userAgentData.brands.some(data => data.brand == 'Chromium') : false;
+    static isChromeOS = isBrowser ? /\bCrOS\b/.test(navigator.userAgent) : false;
+
 }

@@ -1,3 +1,5 @@
+/// <reference path="../shared/navigationApi.d.ts" />
+
 import BareClient, {BareFetchInit, createBareClient} from "@tomphttp/bare-client";
 import $ from 'cash-dom';
 import * as async from 'modern-async';
@@ -7,6 +9,7 @@ import CookiePopupBlockerResponder from "./extensionResponders/cookiePopupBlocke
 import to from "await-to-js";
 import {listenForWebViewMessages} from "./communication";
 import Product from "../shared/product";
+import Utils from "../shared/utils";
 
 document.title = Product.productName;
 
@@ -14,18 +17,20 @@ const serverUrl = 'http://localhost:8080';
 $(async () => {
     const extensionResponders = [new CookiePopupBlockerResponder()];
 
-    let err, bareClient: BareClient
-    [err, bareClient] = await to(createBareClient(`${serverUrl}/bare/`));
-    if (err)
-        console.error("❌ Failed to connect to initialise Bare Client", err);
-    else {
-        // @ts-ignore
-        window.fetch = (input, init) => {
-            try {
-                return bareClient.fetch(input, init as BareFetchInit);
-            } catch (err) {
-                console.error("❌ Failed to fetch", err);
-                throw err;
+    if (Utils.isChromium && window.navigation) {
+        let err, bareClient: BareClient
+        [err, bareClient] = await to(createBareClient(`${serverUrl}/bare/`));
+        if (err)
+            console.error("❌ Failed to connect to initialise Bare Client", err);
+        else {
+            // @ts-ignore
+            window.fetch = (input, init) => {
+                try {
+                    return bareClient.fetch(input, init as BareFetchInit);
+                } catch (err) {
+                    console.error("❌ Failed to fetch", err);
+                    throw err;
+                }
             }
         }
     }
