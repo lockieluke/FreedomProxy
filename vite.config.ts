@@ -1,11 +1,11 @@
-import { defineConfig } from 'vite';
-import react from "@vitejs/plugin-react-swc";
-import { viteSingleFile } from "vite-plugin-singlefile";
-import { ViteMinifyPlugin } from 'vite-plugin-minify';
+import {defineConfig} from 'vite';
+import {viteSingleFile} from "vite-plugin-singlefile";
+import {ViteMinifyPlugin} from 'vite-plugin-minify';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import {NodeGlobalsPolyfillPlugin} from "@esbuild-plugins/node-globals-polyfill";
 import * as child_process from "child_process";
 import ConditionalCompile from "vite-plugin-conditional-compiler";
+import preact from "@preact/preset-vite";
 
 export default defineConfig({
     root: 'web/',
@@ -13,6 +13,11 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 app: 'web/index.html'
+            },
+            onwarn: (warning, warn) => {
+                if (warning.code === 'MODULE_LEVEL_DIRECTIVE' && warning.message.includes(`'use client'`))
+                    return;
+                warn(warning);
             }
         },
         outDir: '../dist/',
@@ -41,7 +46,11 @@ export default defineConfig({
             stream: "stream-browserify",
             zlib: "browserify-zlib",
             util: "util",
-            '@assets': '/assets'
+            '@assets': '/assets',
+            'react': 'preact/compat',
+            'react-dom': 'preact/compat',
+            'react-dom/test-utils': 'preact/test-utils',
+            'react/jsx-runtime': 'preact/jsx-runtime'
         },
     },
     define: {
@@ -50,5 +59,5 @@ export default defineConfig({
     envDir: '../',
     plugins: [tsconfigPaths({
         projects: ['tsconfig.web.json']
-    }), react(), viteSingleFile(), ViteMinifyPlugin(), ConditionalCompile()]
+    }), preact(), viteSingleFile(), ViteMinifyPlugin(), ConditionalCompile()]
 });

@@ -1,6 +1,7 @@
 // @ts-ignore
 import dinoHTML from '@assets/dino.html?raw';
-import {createRef, useEffect} from "react";
+import {useEffect} from "preact/hooks";
+import {createRef} from "preact";
 
 export default function ChromeDino() {
     const dinoFrameRef = createRef<HTMLIFrameElement>();

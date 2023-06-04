@@ -8,7 +8,6 @@ import Utils from "../../shared/utils";
 import Product from "../../shared/product";
 import ChromeDino from "./ChromeDino";
 import BrowserVersionDisplay from "./BrowserVersionDisplay";
-/** @ts-ignore @type {import('dompurify/index')} */
 
 export default function Root() {
     return (

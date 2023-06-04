@@ -1,6 +1,6 @@
 /// <reference path="../types.d.ts" />
 
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "preact/hooks";
 import {SharedCTX} from "../ctx";
 import {listenForWebViewMessages} from "../communication";
 import to from "await-to-js";

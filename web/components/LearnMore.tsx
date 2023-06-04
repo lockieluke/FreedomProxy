@@ -1,4 +1,4 @@
-import {useEffect, useLayoutEffect, useRef} from "react";
+import {useEffect, useLayoutEffect, useRef} from "preact/hooks";
 import {marked} from "marked";
 import * as _ from "lodash-es";
 

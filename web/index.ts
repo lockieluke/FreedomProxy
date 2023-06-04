@@ -3,13 +3,13 @@
 import BareClient, {BareFetchInit, createBareClient} from "@tomphttp/bare-client";
 import $ from 'cash-dom';
 import * as async from 'modern-async';
-import {createRoot} from "react-dom/client";
 import App from "./components/Root";
 import CookiePopupBlockerResponder from "./extensionResponders/cookiePopupBlocker";
 import to from "await-to-js";
 import {listenForWebViewMessages} from "./communication";
 import Product from "../shared/product";
 import Utils from "../shared/utils";
+import {render} from "preact";
 
 document.title = Product.productName;
 
@@ -46,7 +46,6 @@ $(async () => {
         });
     });
 
-    const root = createRoot($('#app').get(0));
-    root.render(App());
-    console.log("✅ Initialised React UI");
+    render(App(), document.getElementById('app'));
+    console.log("✅ Initialised Preact UI");
 });

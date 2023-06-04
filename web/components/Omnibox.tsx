@@ -4,7 +4,7 @@ import $ from 'cash-dom';
 import * as _ from 'lodash-es';
 import {Button, Dropdown, Spinner} from "flowbite-react";
 import normalizeUrl from "normalize-url";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "preact/hooks";
 import {AiOutlineArrowRight} from "react-icons/ai";
 import {Else, If, Then} from "react-if";
 import store from "store2";
@@ -51,7 +51,9 @@ export default function Omnibox() {
         });
 
         omnibox.value = store.get("omnibox.lastInput") || "";
-        omnibox.focus();
+        _.defer(() => {
+           omnibox.focus();
+        });
     }, []);
 
     const handleOmniboxSubmit = () => {

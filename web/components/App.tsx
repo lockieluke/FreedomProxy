@@ -1,5 +1,4 @@
 import to from "await-to-js";
-import {useEffect, useLayoutEffect, useState} from "react";
 import * as _ from "lodash-es";
 import Analytics from "../analytics";
 import {SharedCTX} from "../ctx";
@@ -11,6 +10,7 @@ import {Slide, toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {Modal} from "flowbite-react";
 import Product from "../../shared/product";
+import {useEffect, useLayoutEffect, useState} from "preact/hooks";
 
 export default function App() {
     const [connected, setConnected] = useState(false);
@@ -28,7 +28,7 @@ export default function App() {
                 console.log(`✅ Retrieved client IP: ${ipInfo.ipAddress}`);
 
             try {
-                window.helper = new Helper(ipInfo,connected => {
+                window.helper = new Helper(ipInfo, connected => {
                     setConnected(connected);
                 });
             } catch (err) {
@@ -51,6 +51,22 @@ export default function App() {
         });
     }, []);
 
+    const children = () => (
+        <>
+            <Modal dismissible show={showAboutDialog} onClose={() => setShowAboutDialog(false)}>
+                <Modal.Header>About {Product.productName}</Modal.Header>
+                <Modal.Body>
+                    <p>Commit Hash: {Product.commitHash}</p>
+                    <a className="text-blue-600 hover:underline"
+                       href="https://github.com/lockieluke/FreedomProxy">GitHub</a>
+                </Modal.Body>
+            </Modal>
+            <Omnibox/>
+            <WebView/>
+            <ToastContainer/>
+        </>
+    );
+
     return (<SharedCTX.Provider value={{
         connected,
         url,
@@ -68,16 +84,5 @@ export default function App() {
         setShowAboutDialog,
         isLoading,
         setIsLoading
-    }}>
-        <Modal dismissible show={showAboutDialog} onClose={() => setShowAboutDialog(false)}>
-            <Modal.Header>About {Product.productName}</Modal.Header>
-            <Modal.Body>
-                <p>Commit Hash: {Product.commitHash}</p>
-                <a className="text-blue-600 hover:underline" href="https://github.com/lockieluke/FreedomProxy">GitHub</a>
-            </Modal.Body>
-        </Modal>
-        <Omnibox/>
-        <WebView/>
-        <ToastContainer />
-    </SharedCTX.Provider>);
+    }} children={children()} />);
 }

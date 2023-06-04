@@ -1,18 +1,22 @@
 {
-  "extends": "tsconfig.json",
+  "extends": "./tsconfig.json",
   "exclude": [
-    "node_modules",
+    "./node_modules",
     "dist",
     "src",
     "runtime"
   ],
-  "include": ["web"],
+  "include": ["web/**/*", "shared/**/*.ts"],
   "compilerOptions": {
     "rootDir": "web",
     "esModuleInterop": true,
     "paths": {
-      "@assets/*": ["web/assets/*"]
+      "@assets/*": ["web/assets/*"],
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"]
     },
-    "jsx": "react"
+    "baseUrl": "./",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   }
 }

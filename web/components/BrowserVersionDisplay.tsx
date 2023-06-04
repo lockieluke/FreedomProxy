@@ -1,4 +1,6 @@
-import {useEffect, useState} from "react";
+/// <reference path="../../shared/navigationApi.d.ts" />
+
+import {useEffect, useState} from "preact/hooks";
 import {IResult, UAParser} from "ua-parser-js";
 import * as _ from "lodash-es";
 import {If, Then} from "react-if";
