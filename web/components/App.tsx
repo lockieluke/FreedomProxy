@@ -11,8 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Modal} from "flowbite-react";
 import Product from "../../shared/product";
 import {useEffect, useLayoutEffect, useState} from "preact/hooks";
-import {Else, If, Then} from "react-if";
-import $ from "cash-dom";
+import {If, Then} from "react-if";
 
 export default function App() {
     const [isFocused, setIsFocused] = useState(true);
@@ -68,6 +67,7 @@ export default function App() {
         };
     }, []);
 
+    const defaultClassName = 'flex flex-col items-center justify-center h-screen';
 
     // @ts-ignore
     return (<SharedCTX.Provider value={{
@@ -96,17 +96,17 @@ export default function App() {
                    href="https://github.com/lockieluke/FreedomProxy">GitHub</a>
             </Modal.Body>
         </Modal>
-        <If condition={isFocused}>
+        <Omnibox/>
+        <WebView/>
+        <If condition={!isFocused}>
             <Then>
-                <Omnibox/>
-                <WebView/>
-            </Then>
-            <Else>
-                <div className="flex flex-col items-center justify-center h-screen">
-                    <p className="text-2xl font-bold">FreedomProxy</p>
-                    <p className="text-xl">is sleeping...</p>
+                <div class={'absolute bg-white inset-0 z-50'}>
+                    <div class={defaultClassName}>
+                        <p className="text-2xl font-bold">FreedomProxy</p>
+                        <p className="text-xl">is sleeping...</p>
+                    </div>
                 </div>
-            </Else>
+            </Then>
         </If>
         <ToastContainer />
     </SharedCTX.Provider>);
