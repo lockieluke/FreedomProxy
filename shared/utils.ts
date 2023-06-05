@@ -57,6 +57,10 @@ export default class Utils {
         return str === null || str.match(/^ *$/) !== null;
     }
 
+    static searchUrl(keyword: string) {
+        return `https://www.google.com/search?q=${encodeURIComponent(keyword)}`;
+    }
+
     static isChromium = isBrowser ? !!navigator.userAgentData && navigator.userAgentData.brands.some(data => data.brand == 'Chromium') : false;
     static isChromeOS = isBrowser ? /\bCrOS\b/.test(navigator.userAgent) : false;
 

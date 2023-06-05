@@ -62,6 +62,12 @@ export default function Omnibox() {
         if (!sharedCTX.connected) return;
 
         if (!isUrl(currentInput)) {
+            if (!currentInput.includes(".")) {
+                store.set("omnibox.lastInput", currentInput);
+                sharedCTX.setUrl(Utils.searchUrl(currentInput));
+                return;
+            }
+
             const url = normalizeUrl(currentInput.replace(/^(?!www\.)/, "www."), {
                 stripWWW: false,
                 forceHttps: true
@@ -208,7 +214,7 @@ export default function Omnibox() {
                                 return;
 
                             const currentSuggestion = suggestions[index];
-                            sharedCTX.setUrl(isUrl(currentSuggestion) ? currentSuggestion : `https://www.google.com/search?q=${currentSuggestion}`)
+                            sharedCTX.setUrl(isUrl(currentSuggestion) ? currentSuggestion : Utils.searchUrl(currentSuggestion))
                             setSuggestions([]);
                             omniboxRef.current.blur();
                         }}
