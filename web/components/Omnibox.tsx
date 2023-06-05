@@ -51,9 +51,10 @@ export default function Omnibox() {
         });
 
         omnibox.value = store.get("omnibox.lastInput") || "";
-        _.defer(() => {
-           omnibox.focus();
-        });
+        _.delay(() => {
+            document.body.focus();
+            omnibox.focus();
+        }, 100);
     }, []);
 
     const handleOmniboxSubmit = () => {
@@ -187,7 +188,7 @@ export default function Omnibox() {
                             <BsArrowLeft className="ml-1" size={20}/><span className="ml-2">Back</span>
                         </Dropdown.Item>
                     </If>
-                    <Dropdown.Divider />
+                    <Dropdown.Divider/>
                     <Dropdown.Item>
                         <BsDot color={sharedCTX.connected ? 'green' : 'red'}
                                size={30}/> {sharedCTX.connected ? "Connected" : "Disconnected"}

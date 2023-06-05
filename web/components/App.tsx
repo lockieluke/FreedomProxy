@@ -11,8 +11,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Modal} from "flowbite-react";
 import Product from "../../shared/product";
 import {useEffect, useLayoutEffect, useState} from "preact/hooks";
+import {Else, If, Then} from "react-if";
+import $ from "cash-dom";
 
 export default function App() {
+    const [isFocused, setIsFocused] = useState(true);
     const [connected, setConnected] = useState(false);
     const [url, _setUrl] = useState<string>();
     const [urls, setUrls] = useState([]);
@@ -49,24 +52,24 @@ export default function App() {
                 icon: '🔒'
             });
         });
+
+        const onFocus = () => setIsFocused(true);
+        const onBlur = () => {
+            if (!document.hidden && !document.hasFocus())
+                setIsFocused(false);
+        };
+
+        window.addEventListener('focus', onFocus);
+        window.addEventListener('blur', onBlur);
+
+        return () => {
+            window.removeEventListener('focus', onFocus);
+            window.removeEventListener('blur', onBlur);
+        };
     }, []);
 
-    const children = () => (
-        <>
-            <Modal dismissible show={showAboutDialog} onClose={() => setShowAboutDialog(false)}>
-                <Modal.Header>About {Product.productName}</Modal.Header>
-                <Modal.Body>
-                    <p>Commit Hash: {Product.commitHash}</p>
-                    <a className="text-blue-600 hover:underline"
-                       href="https://github.com/lockieluke/FreedomProxy">GitHub</a>
-                </Modal.Body>
-            </Modal>
-            <Omnibox/>
-            <WebView/>
-            <ToastContainer/>
-        </>
-    );
 
+    // @ts-ignore
     return (<SharedCTX.Provider value={{
         connected,
         url,
@@ -84,5 +87,27 @@ export default function App() {
         setShowAboutDialog,
         isLoading,
         setIsLoading
-    }} children={children()} />);
+    }}>
+        <Modal dismissible show={showAboutDialog} onClose={() => setShowAboutDialog(false)}>
+            <Modal.Header>About {Product.productName}</Modal.Header>
+            <Modal.Body>
+                <p>Commit Hash: {Product.commitHash}</p>
+                <a className="text-blue-600 hover:underline"
+                   href="https://github.com/lockieluke/FreedomProxy">GitHub</a>
+            </Modal.Body>
+        </Modal>
+        <If condition={isFocused}>
+            <Then>
+                <Omnibox/>
+                <WebView/>
+            </Then>
+            <Else>
+                <div className="flex flex-col items-center justify-center h-screen">
+                    <p className="text-2xl font-bold">FreedomProxy</p>
+                    <p className="text-xl">is sleeping...</p>
+                </div>
+            </Else>
+        </If>
+        <ToastContainer />
+    </SharedCTX.Provider>);
 }
