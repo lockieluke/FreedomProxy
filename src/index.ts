@@ -14,7 +14,7 @@ import {resolve} from "import-meta-resolve";
 import * as _ from 'lodash-es';
 import fetch from "node-fetch";
 import * as path from "path";
-import url from "url";
+import * as url from "url";
 import Msgpack from "../shared/msgpack";
 import Network from "./network";
 import {cssAbsolutifyUrls, htmlAbsolutifyUrls} from "./preprocessing";
@@ -84,21 +84,21 @@ app.register(async fastify => {
 
                 case 'get-html':
                     await (async () => {
-                        const url = new URL(payload.url)
-                        const [err, html] = await Utils.toESM(Network.fetchHTML(url, req));
+                        const targetUrl = new URL(payload.url)
+                        const [err, html] = await Utils.toESM(Network.fetchHTML(targetUrl, req));
                         if (err)
                             return send({error: err.message}, true);
                         const $ = cheerio.load(html);
-                        htmlAbsolutifyUrls(_.toString(url), $);
-                        cssAbsolutifyUrls(_.toString(url), $);
+                        htmlAbsolutifyUrls(_.toString(targetUrl), $);
+                        cssAbsolutifyUrls(_.toString(targetUrl), $);
 
                         $('<meta name="darkreader-lock">').appendTo('head');
 
-                        const bareClientJS = await fs.readFile(resolve('@tomphttp/bare-client', import.meta.url).replace(/(^\w+:|^)\/\//, '').replace('.js', '.cjs'), 'utf-8');
+                        const bareClientJS = await fs.readFile(url.fileURLToPath(resolve('@tomphttp/bare-client', import.meta.url)).replace('.js', '.cjs'), 'utf-8');
                         const runtimeJS = await fs.readFile(path.join(__dirname, '..', 'dist', 'runtime.js'), 'utf-8');
                         const script = `
                     <script type="application/javascript">
-                    window.targetUrl = '${_.toString(url)}';
+                    window.targetUrl = '${_.toString(targetUrl)}';
                     window.serverUrl = '${Network.currentAddress}';
                     </script>
                     <script type="application/javascript">${bareClientJS}</script>
@@ -121,7 +121,7 @@ app.register(async fastify => {
 
                         send({
                             html: $.html({
-                                baseURI: _.toString(url)
+                                baseURI: _.toString(targetUrl)
                             })
                         });
                     })();
