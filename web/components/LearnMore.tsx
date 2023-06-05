@@ -30,6 +30,7 @@ export default function LearnMore(props: { onBack?: () => void }) {
         <html lang="en">
         <head>
             <meta charset="UTF-8">
+            <meta name="darkreader-lock">
             <title>Learn More</title>
             <style>
             body {
