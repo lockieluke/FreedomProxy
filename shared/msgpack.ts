@@ -4,12 +4,12 @@ export default class Msgpack {
 
     static packr = new Packr();
 
-    static encodeToString(data: any): string {
-        return this.packr.pack(data).toString('base64');
+    static encode(data: any): Buffer {
+        return this.packr.pack(data);
     }
 
-    static decodeFromString(data: string): any {
-        return this.packr.unpack(Buffer.from(data, 'base64'));
+    static decode(data: Buffer): any {
+        return this.packr.unpack(data);
     }
 
 }

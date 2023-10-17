@@ -1,5 +1,6 @@
 import Msgpack from "../shared/msgpack";
 import {ClientIPInfo} from "./analytics";
+import {Buffer} from "buffer";
 
 export default class Helper {
 
@@ -28,8 +29,9 @@ export default class Helper {
     send(route: string, payload: any = {}) {
         return new Promise<any>((resolve, reject) => {
             const requestUUID = window.crypto.randomUUID();
-            const receiveCB = event => {
-                const data = JSON.parse(Msgpack.decodeFromString(event.data));
+            const receiveCB = async (event: MessageEvent) => {
+                const blob: Blob = event.data;
+                const data = JSON.parse(Msgpack.decode(Buffer.from(await blob.arrayBuffer())));
 
                 if (data.ogRoute === route && data.error) {
                     this.ws.removeEventListener('message', receiveCB);
@@ -43,11 +45,11 @@ export default class Helper {
             }
             this.ws.addEventListener('message', receiveCB);
 
-            this.ws.send(Msgpack.encodeToString(JSON.stringify({
+            this.ws.send(Msgpack.encode({
                 route,
                 requestUUID,
                 ...payload
-            })));
+            }));
         })
     }
 

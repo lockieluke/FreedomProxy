@@ -1,6 +1,6 @@
 import fastifyCors from '@fastify/cors';
 import fastifyWebsocket from "@fastify/websocket";
-import createBareServer from '@tomphttp/bare-server-node';
+import {createBareServer} from '@tomphttp/bare-server-node';
 import arrayBufferToBuffer from 'arraybuffer-to-buffer';
 import blocked from 'blocked-at';
 import * as async from 'modern-async';
@@ -69,11 +69,11 @@ app.register(async fastify => {
             console.error(err);
         });
 
-        conn.socket.on('message', async rawMessage => {
-            const payload = JSON.parse(Msgpack.decodeFromString(_.toString(rawMessage)));
+        conn.socket.on('message', async (rawMessage: Buffer) => {
+            const payload = Msgpack.decode(rawMessage);
             const route = payload.route;
             const send = (sendPayload: any, error: boolean = false) => {
-                conn.socket.send(Msgpack.encodeToString(JSON.stringify(error ? {...sendPayload, 'ogRoute': route} : {
+                conn.socket.send(Msgpack.encode(JSON.stringify(error ? {...sendPayload, 'ogRoute': route} : {
                     ...sendPayload,
                     'route': `${route}-response`,
                     'requestUUID': payload.requestUUID
@@ -94,7 +94,7 @@ app.register(async fastify => {
 
                         $('<meta name="darkreader-lock">').appendTo('head');
 
-                        const bareClientJS = await fs.readFile(url.fileURLToPath(resolve('@tomphttp/bare-client', import.meta.url)).replace('.js', '.cjs'), 'utf-8');
+                        const bareClientJS = await fs.readFile(url.fileURLToPath(resolve('@tomphttp/bare-client', import.meta.url)), 'utf-8');
                         const runtimeJS = await fs.readFile(path.join(__dirname, '..', 'dist', 'runtime.js'), 'utf-8');
                         const script = `
                     <script type="application/javascript">

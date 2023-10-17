@@ -48,3 +48,4 @@ await esbuild.build({
     },
     external: ['blocked-at']
 });
+console.log('✅  FreedomProxy Server Rebuilt');
