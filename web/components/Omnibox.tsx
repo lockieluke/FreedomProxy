@@ -36,18 +36,17 @@ export default function Omnibox() {
 
         window.addEventListener('keydown', event => {
             if (event.key === "Escape")
-                omniboxRef.current.blur();
+                omniboxRef.current?.blur();
 
-            const controlKey = navigator.userAgentData.platform === 'macOS' ? event.metaKey : event.ctrlKey;
-            if (controlKey && event.shiftKey && event.key === 'l') {
+            if (Utils.controlKey(event) && event.shiftKey && event.key === 'l') {
                 event.preventDefault();
-                omniboxRef.current.focus();
+                omniboxRef.current?.focus();
             }
         });
 
         listenForWebViewMessages(message => {
             if (message['type'] === 'omnibox.focus')
-                omniboxRef.current.focus();
+                omniboxRef.current?.focus();
         });
 
         omnibox.value = store.get("omnibox.lastInput") || "";
@@ -58,7 +57,7 @@ export default function Omnibox() {
     }, []);
 
     const handleOmniboxSubmit = () => {
-        const currentInput = omniboxRef.current.value;
+        const currentInput = omniboxRef.current?.value;
         if (!sharedCTX.connected) return;
 
         if (!isUrl(currentInput)) {
@@ -79,12 +78,12 @@ export default function Omnibox() {
         } else {
             sharedCTX.setUrl(currentInput);
         }
-        omniboxRef.current.blur();
+        omniboxRef.current?.blur();
         setSuggestions([]);
     };
 
     useEffect(() => {
-        if (sharedCTX.url === omniboxRef.current.value || !sharedCTX.url) return;
+        if (sharedCTX.url === omniboxRef.current?.value || !sharedCTX.url) return;
 
         omniboxRef.current.value = sharedCTX.url;
     }, [sharedCTX.url]);

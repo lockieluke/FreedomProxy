@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "concurrently --kill-others \"npm:build:server\" \"npm:build:web\" \"npm:build:runtime\"",
+    "build": "concurrently --kill-others \"yarn build:server\" \"yarn build:web\" \"yarn build:runtime\"",
+    "build:wrapper": "tsx build-wrapper.ts",
     "build:server": "tsx build.ts",
     "build:web": "vite build",
     "build:runtime": "tsx build-runtime.ts",
@@ -15,6 +16,9 @@
     "dev": "concurrently --kill-others \"npm:dev:server\" \"npm:dev:web\" \"npm:dev:runtime\"",
     "clean": "rimraf dist/",
     "analyse:deps": "vite-bundle-visualizer"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",

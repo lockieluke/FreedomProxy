@@ -37,7 +37,7 @@ export default function WebView() {
                 url
             }));
             if (err) {
-                console.error(`🌐 Failed to load URL: ${url}`);
+                console.error(`🌐 Failed to load URL ${url}: ${err} `);
                 sharedCTX.setIsLoading(false);
                 return;
             }

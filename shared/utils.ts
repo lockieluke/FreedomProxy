@@ -14,7 +14,7 @@ export default class Utils {
     static toESM: typeof toDefault = isBrowser ? null as any : _.get(toDefault, 'default') as unknown as typeof toDefault;
 
     static controlKey(event: KeyboardEvent) {
-        return navigator.userAgentData?.platform === 'macOS' ? event.metaKey : event.ctrlKey;
+        return this.isMacLegacy ?? navigator.userAgentData?.platform === 'macOS' ? event.metaKey : event.ctrlKey;
     }
 
     static rewriteUrl(url: string, origin: string = targetUrl) {
@@ -61,7 +61,8 @@ export default class Utils {
         return `https://www.google.com/search?q=${encodeURIComponent(keyword)}`;
     }
 
-    static isChromium = isBrowser ? !!navigator.userAgentData && navigator.userAgentData.brands.some(data => data.brand == 'Chromium') : false;
+    static isMacLegacy = isBrowser ? navigator.platform.toUpperCase().indexOf('MAC')>=0 : process.platform === 'darwin';
+    static isChromium = isBrowser ? (_.isNil(window.navigator.userAgentData) ? !_.isNil(_.get(window, 'chrome')) : (!!navigator.userAgentData && navigator.userAgentData.brands.some(data => data.brand == 'Chromium'))) : false;
     static isChromeOS = isBrowser ? /\bCrOS\b/.test(navigator.userAgent) : false;
 
 }

@@ -1,0 +1,15 @@
+<!DocType html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <script>
+        // open in html in about:blank cloaking
+        const win = window.open();
+        const iframe = `<iframe sandbox="allow-scripts" src="<%= url %>" style="width: 100%; height: 100%; border: none;"></iframe>`;
+        win.document.open();
+        win.document.write(iframe);
+        win.document.close();
+        window.close();
+    </script>
+</head>

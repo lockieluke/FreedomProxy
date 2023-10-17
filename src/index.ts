@@ -244,14 +244,15 @@ app.get('/launcher', async (request, reply) => {
 
 const port = _.toNumber(process.env.PORT ?? 8080);
 app.ready(async () => {
-    await app.listen({
-        port
+    app.listen({
+        port,
+        host: '0.0.0.0'
     }, (err, address) => {
         if (err)
             console.error(err);
 
         console.log(`🚀 Server listening on ${address}`);
-        Network.currentAddress = address.replace('[::1]', 'localhost');
+        Network.currentAddress = process.env.ENDPOINT ?? address.replace('[::1]', 'localhost');
     });
 });
 

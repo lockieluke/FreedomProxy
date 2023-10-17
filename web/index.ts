@@ -11,10 +11,14 @@ import {listenForWebViewMessages} from "./communication";
 import Product from "../shared/product";
 import Utils from "../shared/utils";
 import {render} from "preact";
+import Polyfill from "./polyfill";
 
 document.title = Product.productName;
 
 const serverUrl = import.meta.env.VITE_ENDPOINT ?? 'http://localhost:8080';
+
+Polyfill.loadPolyfills();
+
 $(async () => {
     const extensionResponders = [new CookiePopupBlockerResponder()];
 

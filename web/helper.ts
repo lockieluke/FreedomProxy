@@ -9,7 +9,7 @@ export default class Helper {
     connected = false;
 
     constructor(ipInfo: ClientIPInfo, cb: (connected: boolean) => void = () => {}) {
-        const ws = new WebSocket(`ws://localhost:8080/ws?ip=${ipInfo?.ipAddress ?? "0.0.0.0"}`);
+        const ws = new WebSocket(`${import.meta.env.VITE_WS_ENDPOINT ?? 'ws://localhost:8080'}/ws?ip=${ipInfo?.ipAddress ?? "0.0.0.0"}`);
         ws.addEventListener('error', err => {
             if (err)
                 console.error(`❌ WS connection error: ${err}`);
