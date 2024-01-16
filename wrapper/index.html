@@ -6,9 +6,16 @@
     <script>
         // open in html in about:blank cloaking
         const win = window.open();
-        const iframe = `<iframe sandbox="allow-scripts" src="<%= url %>" style="width: 100%; height: 100%; border: none;"></iframe>`;
         win.document.open();
-        win.document.write(iframe);
+        const scriptElement = win.document.createElement('script');
+        scriptElement.innerText = `
+        setTimeout(() => {
+            document.open();
+            document.write(btoa("<%= html %>"));
+            document.close();
+        }, 500);
+        `;
+        win.document.write(scriptElement.outerHTML);
         win.document.close();
         window.close();
     </script>
