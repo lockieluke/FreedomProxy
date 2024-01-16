@@ -21,3 +21,6 @@ dist/
 # Config files
 .env
 .env*
+
+# macOS
+.DS_Store
