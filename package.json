@@ -1,6 +1,6 @@
 {
   "name": "freedom-proxy",
-  "packageManager": "yarn@4.0.0-rc.53",
+  "packageManager": "yarn@4.0.2",
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
