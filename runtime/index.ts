@@ -21,7 +21,7 @@ DOM.runDomClock();
 $(async () => {
     performance.mark('extensionsStart');
     const extensions = [new CookiePopupBlocker()];
-    await async.forEach(extensions, extension => extension.onInit());
+    await async.asyncForEach(extensions, extension => extension.onInit());
     window['extensions'] = extensions;
     performance.mark('extensionsEnd');
 

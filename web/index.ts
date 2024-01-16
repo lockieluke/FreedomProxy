@@ -46,7 +46,7 @@ $(async () => {
         const type = message.type;
 
         const sendResponse = (response: any) => iframe.contentWindow?.postMessage(JSON.stringify(response), '*');
-        await async.forEach(extensionResponders, extensionResponder => {
+        await async.asyncForEach(extensionResponders, extensionResponder => {
             if (type?.startsWith(extensionResponder.messagePrefix))
                 extensionResponder.onMessage(message, sendResponse);
         });

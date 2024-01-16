@@ -2,19 +2,19 @@ import $ from 'cash-dom';
 import * as _ from 'lodash-es';
 import * as async from 'modern-async';
 import Utils from "../shared/utils";
-import validDataUrl = require('valid-data-url');
+import validDataUrl from 'valid-data-url';
 import Extension from "./extensions";
 
 export default class DOM {
 
     static runDomClock() {
         const observer = new MutationObserver(async mutations => {
-            const addedNodes = _.castArray(await async.map(mutations, mutation => mutation.target));
+            const addedNodes = _.castArray(await async.asyncMap(mutations, mutation => mutation.target));
             if (_.isEmpty(addedNodes))
                 return;
 
-            await async.forEach(addedNodes, async addedNode => {
-                await async.forEach((window['extensions'] as Extension[]) ?? [], extension => {
+            await async.asyncForEach(addedNodes, async addedNode => {
+                await async.asyncForEach((_.get(window, "extensions") as unknown as Extension[]) ?? [], extension => {
                     if (_.isFunction(extension.onDomNodeAdded))
                         extension.onDomNodeAdded($(addedNode));
                 });
@@ -38,11 +38,11 @@ export default class DOM {
 
         // Need separate observer for style attribute for some reason
         const styleObserver = new MutationObserver(async mutations => {
-            const addedNodes = _.castArray(await async.map(mutations, mutation => mutation.target));
+            const addedNodes = _.castArray(await async.asyncMap(mutations, mutation => mutation.target));
             if (_.isEmpty(addedNodes))
                 return;
 
-            await async.forEach(addedNodes, async addedNode => {
+            await async.asyncForEach(addedNodes, async addedNode => {
                 const $elm = $(addedNode);
                 const style = $elm.attr('style');
                 if (!style)
@@ -68,14 +68,14 @@ export default class DOM {
         Element.prototype.appendChild = new Proxy(Element.prototype.appendChild, {
             apply: function (target, thisArg, argumentsList) {
                 DOM.rewriteAttributesSync(_.first(argumentsList));
-                return target.apply(thisArg, argumentsList);
+                return target.apply(thisArg, argumentsList as never);
             }
         });
 
         Element.prototype.insertBefore = new Proxy(Element.prototype.insertBefore, {
             apply: function (target, thisArg, argumentsList) {
                 DOM.rewriteAttributesSync(_.first(argumentsList));
-                return target.apply(thisArg, argumentsList);
+                return target.apply(thisArg, argumentsList as never);
             }
         });
 
@@ -83,15 +83,16 @@ export default class DOM {
             apply: function (target, thisArg, argumentsList) {
                 // Uncaught RangeError: Maximum call stack size exceeded happens sometimes, rewriteAttributes has to be extremely optimised and fast
                 argumentsList[1] = DOM.rewriteAttribute(argumentsList[0], argumentsList[1]);
-                return target.apply(thisArg, argumentsList);
+                return target.apply(thisArg, argumentsList as never);
             }
         });
 
         (async () => {
             const elementTypes = [HTMLImageElement, HTMLScriptElement, HTMLDivElement, HTMLElement];
-            await async.forEach(elementTypes, async elementType => {
-                await async.forEach(['src', 'href'], elementAttribute => {
-                    DOM.interceptAttributeSet(elementType.prototype, elementAttribute, function (value) {
+            await async.asyncForEach(elementTypes, async elementType => {
+                await async.asyncForEach(['src', 'href'], elementAttribute => {
+                    DOM.interceptAttributeSet(elementType.prototype, elementAttribute, function (value: string) {
+                        // @ts-expect-error this is HTMLElement
                         this.setAttribute(elementAttribute, value);
                     });
                 });
@@ -124,7 +125,7 @@ export default class DOM {
     static rewriteStyle(style: string): [string, boolean] {
         let needReplacing = false;
         const newStyle = style.replace(/url\((.*?)\)/g, (match, p1) => {
-            if (p1.startsWith(window['serverUrl']) || validDataUrl(p1.replace(/^"(.*)"$/, '$1')))
+            if (p1.startsWith(_.get(window, 'serverUrl')) || validDataUrl(p1.replace(/^"(.*)"$/, '$1')))
                 return match;
             needReplacing = true;
             return `url(${Utils.rewriteUrl(p1.replace(/^"(.*)"$/, '$1'))})`;
@@ -148,8 +149,8 @@ export default class DOM {
 
     static async rewriteAttributes(element: Element) {
         if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
-            await async.forEach(element.getAttributeNames(), attribute => {
-                element.setAttribute(attribute, element.getAttribute(attribute));
+            await async.asyncForEach(element.getAttributeNames(), attribute => {
+                element.setAttribute(attribute, element.getAttribute(attribute)!);
             });
         }
     }
@@ -157,7 +158,7 @@ export default class DOM {
     static rewriteAttributesSync(element: Element) {
         if (_.isFunction(element.getAttribute) && _.isFunction(element.setAttribute)) {
             _.forEach(element.getAttributeNames(), attribute => {
-                element.setAttribute(attribute, element.getAttribute(attribute));
+                element.setAttribute(attribute, element.getAttribute(attribute)!);
             });
         }
     }

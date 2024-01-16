@@ -58,6 +58,6 @@ export default defineConfig({
     },
     envDir: '../',
     plugins: [tsconfigPaths({
-        projects: ['tsconfig.web.json']
+        projects: ['../tsconfig.web.json']
     }), preact(), viteSingleFile(), ViteMinifyPlugin(), ConditionalCompile()]
 });

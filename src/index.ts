@@ -195,7 +195,7 @@ app.all<{
     // Remove content-encoding header to prevent double compression, and copy all other headers
     const responseHeaders = response.headers;
     responseHeaders.delete('content-encoding');
-    await async.forEach(responseHeaders, ([key, value]) => {
+    await async.asyncForEach(responseHeaders, ([key, value]) => {
         res.header(key, value);
     });
 
