@@ -31,9 +31,10 @@ export default defineConfig({
                 global: "globalThis",
             },
             plugins: [
+                // @ts-ignore
                 NodeGlobalsPolyfillPlugin({
                     process: true,
-                    buffer: true,
+                    buffer: true
                 })
             ],
             treeShaking: true,

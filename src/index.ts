@@ -1,6 +1,5 @@
 import fastifyCors from '@fastify/cors';
 import fastifyWebsocket from "@fastify/websocket";
-import {createBareServer} from '@tomphttp/bare-server-node';
 import arrayBufferToBuffer from 'arraybuffer-to-buffer';
 import blocked from 'blocked-at';
 import * as async from 'modern-async';
@@ -11,6 +10,7 @@ import fastifyGracefulShutdown from "fastify-graceful-shutdown";
 import fs from "fs-extra";
 import nodeHttp from 'http';
 import {resolve} from "import-meta-resolve";
+import {createBareServer} from "@tomphttp/bare-server-node";
 import * as _ from 'lodash-es';
 import fetch from "node-fetch";
 import * as path from "path";
@@ -19,6 +19,7 @@ import Msgpack from "../shared/msgpack";
 import Network from "./network";
 import {cssAbsolutifyUrls, htmlAbsolutifyUrls} from "./preprocessing";
 import Utils from "../shared/utils";
+
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,15 +66,15 @@ app.register(async fastify => {
     }>('/ws', {websocket: true}, (conn, req) => {
         console.log(`WS connection initiated from ${req.query.ip}`);
 
-        conn.socket.on('error', err => {
+        conn.on('error', err => {
             console.error(err);
         });
 
-        conn.socket.on('message', async (rawMessage: Buffer) => {
+        conn.on('message', async (rawMessage: Buffer) => {
             const payload = Msgpack.decode(rawMessage);
             const route = payload.route;
             const send = (sendPayload: any, error: boolean = false) => {
-                conn.socket.send(Msgpack.encode(JSON.stringify(error ? {...sendPayload, 'ogRoute': route} : {
+                conn.send(Msgpack.encode(JSON.stringify(error ? {...sendPayload, 'ogRoute': route} : {
                     ...sendPayload,
                     'route': `${route}-response`,
                     'requestUUID': payload.requestUUID
@@ -257,8 +258,7 @@ app.ready(async () => {
 });
 
 app.after(() => {
-    app.gracefulShutdown((signal, next) => {
+    app.gracefulShutdown(signal => {
         console.log(`🛑 Received ${signal}, gracefully shutting down...`);
-        next()
     })
 })

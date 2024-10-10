@@ -46,6 +46,6 @@ await esbuild.build({
     define: {
         __COMMIT_HASH__: JSON.stringify(child_process.execSync('git rev-parse HEAD').toString().trim())
     },
-    external: ['blocked-at']
+    external: ['blocked-at', "@tomphttp/bare-server-node"]
 });
 console.log('✅  FreedomProxy Server Rebuilt');
